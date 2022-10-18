@@ -31,7 +31,7 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class UpdateHealthPacket extends OutboundPacket{
+class UpdateHealthPacket extends OutboundPacket {
 
 	/** @var float */
 	public $health;
@@ -40,11 +40,11 @@ class UpdateHealthPacket extends OutboundPacket{
 	/** @var float */
 	public $saturation;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::UPDATE_HEALTH_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putFloat($this->health);
 		$this->putVarInt($this->food);
 		$this->putFloat($this->saturation);

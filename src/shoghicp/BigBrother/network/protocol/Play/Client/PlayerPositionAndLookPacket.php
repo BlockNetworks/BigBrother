@@ -31,7 +31,7 @@ namespace shoghicp\BigBrother\network\protocol\Play\Client;
 
 use shoghicp\BigBrother\network\InboundPacket;
 
-class PlayerPositionAndLookPacket extends InboundPacket{
+class PlayerPositionAndLookPacket extends InboundPacket {
 
 	/** @var float */
 	public $x;
@@ -46,11 +46,11 @@ class PlayerPositionAndLookPacket extends InboundPacket{
 	/** @var bool */
 	public $onGround;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::PLAYER_POSITION_AND_LOOK_PACKET;
 	}
 
-	protected function decode() : void{
+	protected function decode() : void {
 		$this->x = $this->getDouble();
 		$this->y = $this->getDouble();
 		$this->z = $this->getDouble();

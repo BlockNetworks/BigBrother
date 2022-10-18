@@ -31,16 +31,16 @@ namespace shoghicp\BigBrother\network\protocol\Play\Client;
 
 use shoghicp\BigBrother\network\InboundPacket;
 
-class ClientStatusPacket extends InboundPacket{
+class ClientStatusPacket extends InboundPacket {
 
 	/** @var int */
 	public $actionID;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::CLIENT_STATUS_PACKET;
 	}
 
-	protected function decode() : void{
+	protected function decode() : void {
 		$this->actionID = $this->getVarInt();
 	}
 }

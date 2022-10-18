@@ -31,18 +31,18 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class CraftRecipeResponsePacket extends OutboundPacket{
+class CraftRecipeResponsePacket extends OutboundPacket {
 
 	/** @var int */
 	public $windowID;
 	/** @var int */
 	public $recipeId = -1;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::CRAFT_RECIPE_RESPONSE_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putByte($this->windowID);
 		$this->putVarInt($this->recipeId);
 	}

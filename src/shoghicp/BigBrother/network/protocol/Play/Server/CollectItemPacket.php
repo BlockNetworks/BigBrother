@@ -31,7 +31,7 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class CollectItemPacket extends OutboundPacket{
+class CollectItemPacket extends OutboundPacket {
 
 	/** @var int */
 	public $eid;
@@ -40,11 +40,11 @@ class CollectItemPacket extends OutboundPacket{
 	/** @var int */
 	public $itemCount;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::COLLECT_ITEM_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putVarInt($this->target);
 		$this->putVarInt($this->eid);
 		$this->putVarInt($this->itemCount);

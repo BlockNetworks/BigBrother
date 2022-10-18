@@ -33,20 +33,20 @@ use pocketmine\network\mcpe\protocol\CraftingDataPacket;
 
 use shoghicp\BigBrother\DesktopPlayer;
 
-class RecipeUtils{
+class RecipeUtils {
 
 	/** @var DesktopPlayer */
 	private $player;
 
-	public function __construct(DesktopPlayer $player){
+	public function __construct(DesktopPlayer $player) {
 		$this->player = $player;
 	}
 
-	public function onCraftingData(CraftingDataPacket $packet){
+	public function onCraftingData(CraftingDataPacket $packet) {
 		return null;
 	}
 
-	public function __a(){
+	public function __a() {
 		/*$pk = new UnlockRecipesPacket();
 		$pk->actionID = 0;
 		$pk->recipes[] = 163;

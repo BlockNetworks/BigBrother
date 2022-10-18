@@ -35,7 +35,7 @@ use shoghicp\BigBrother\utils\Binary;
 use shoghicp\BigBrother\utils\ConvertUtils;
 use shoghicp\BigBrother\entity\ItemFrameBlockEntity;
 
-class DesktopChunk{
+class DesktopChunk {
 	/** @var DesktopPlayer */
 	private $player;
 	/** @var int */
@@ -58,7 +58,7 @@ class DesktopChunk{
 	 * @param int           $chunkX
 	 * @param int           $chunkZ
 	 */
-	public function __construct(DesktopPlayer $player, int $chunkX, int $chunkZ){
+	public function __construct(DesktopPlayer $player, int $chunkX, int $chunkZ) {
 		$this->player = $player;
 		$this->chunkX = $chunkX;
 		$this->chunkZ = $chunkZ;
@@ -69,13 +69,13 @@ class DesktopChunk{
 		$this->generateChunk();
 	}
 
-	public function generateChunk() : void{
+	public function generateChunk() : void {
 		$chunk = $this->level->getChunk($this->chunkX, $this->chunkZ, false);
 		$this->biomes = $chunk->getBiomeIdArray();
 
 		$payload = "";
-		foreach($chunk->getSubChunks() as $num => $subChunk){
-			if($subChunk->isEmpty()){
+		foreach ($chunk->getSubChunks() as $num => $subChunk) {
+			if ($subChunk->isEmpty()) {
 				continue;
 			}
 
@@ -85,29 +85,29 @@ class DesktopChunk{
 			$bitsPerBlock = 8;
 
 			$chunkData = "";
-			for($y = 0; $y < 16; ++$y){
-				for($z = 0; $z < 16; ++$z){
+			for ($y = 0; $y < 16; ++$y) {
+				for ($z = 0; $z < 16; ++$z) {
 
 					$data = "";
-					for($x = 0; $x < 16; ++$x){
+					for ($x = 0; $x < 16; ++$x) {
 						$blockId = $subChunk->getBlockId($x, $y, $z);
 						$blockData = $subChunk->getBlockData($x, $y, $z);
 
-						if($blockId == Block::FRAME_BLOCK){
+						if ($blockId == Block::FRAME_BLOCK) {
 							ItemFrameBlockEntity::getItemFrame($this->player->getLevel(), $x + ($this->chunkX << 4), $y + ($num << 4), $z + ($this->chunkZ << 4), $blockData, true);
 							$block = Block::AIR;
-						}else{
+						} else {
 							ConvertUtils::convertBlockData(true, $blockId, $blockData);
 							$block = (int) ($blockId << 4) | $blockData;
 						}
 
-						if(($key = array_search($block, $palette, true)) === false){
+						if (($key = array_search($block, $palette, true)) === false) {
 							$key = count($palette);
 							$palette[$key] = $block;
 						}
 						$data .= chr($key);//bit
 
-						if($x === 7 or $x === 15){//Reset ChunkData
+						if ($x === 7 or $x === 15) {//Reset ChunkData
 							$chunkData .= strrev($data);
 							$data = "";
 						}
@@ -117,9 +117,9 @@ class DesktopChunk{
 
 			$blockLightData = "";
 			$skyLightData = "";
-			for($y = 0; $y < 16; ++$y){
-				for($z = 0; $z < 16; ++$z){
-					for($x = 0; $x < 16; $x += 2){
+			for ($y = 0; $y < 16; ++$y) {
+				for ($z = 0; $z < 16; ++$z) {
+					for ($x = 0; $x < 16; $x += 2) {
 						$blockLight = $subChunk->getBlockLight($x, $y, $z) | ($subChunk->getBlockLight($x + 1, $y, $z) << 4);
 						$skyLight = $subChunk->getBlockSkyLight($x, $y, $z) | ($subChunk->getBlockSkyLight($x + 1, $y, $z) << 4);
 
@@ -133,7 +133,7 @@ class DesktopChunk{
 			$payload .= Binary::writeByte($bitsPerBlock).Binary::writeComputerVarInt(count($palette));
 
 			/* Palette */
-			foreach($palette as $value){
+			foreach ($palette as $value) {
 				$payload .= Binary::writeComputerVarInt($value);
 			}
 
@@ -147,7 +147,7 @@ class DesktopChunk{
 			$payload .= $blockLightData;
 
 			/* Sky Light Only Over World */
-			if($this->player->bigBrother_getDimension() === 0){
+			if ($this->player->bigBrother_getDimension() === 0) {
 				$payload .= $skyLightData;
 			}
 		}
@@ -158,28 +158,28 @@ class DesktopChunk{
 	/**
 	 * @return bool
 	 */
-	public function isGroundUp() : bool{
+	public function isGroundUp() : bool {
 		return $this->groundUp;
 	}
 
 	/**
 	 * @return int
 	 */
-	public function getBitMapData() : int{
+	public function getBitMapData() : int {
 		return $this->bitMap;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getBiomesData() : string{
+	public function getBiomesData() : string {
 		return $this->biomes;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getChunkData() : string{
+	public function getChunkData() : string {
 		return $this->chunkData;
 	}
 }

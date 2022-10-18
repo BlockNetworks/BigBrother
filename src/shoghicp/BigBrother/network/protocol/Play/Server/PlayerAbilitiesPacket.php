@@ -31,7 +31,7 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class PlayerAbilitiesPacket extends OutboundPacket{
+class PlayerAbilitiesPacket extends OutboundPacket {
 
 	/** @var bool */
 	public $damageDisabled;
@@ -47,22 +47,22 @@ class PlayerAbilitiesPacket extends OutboundPacket{
 	/** @var float */
 	public $walkingSpeed;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::PLAYER_ABILITIES_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$flags = 0;
-		if($this->isCreative){
+		if ($this->isCreative) {
 			$flags |= 0b1;
 		}
-		if($this->isFlying){
+		if ($this->isFlying) {
 			$flags |= 0b10;
 		}
-		if($this->canFly){
+		if ($this->canFly) {
 			$flags |= 0b100;
 		}
-		if($this->damageDisabled){
+		if ($this->damageDisabled) {
 			$flags |= 0b1000;
 		}
 		$this->putByte($flags);

@@ -33,7 +33,7 @@ use shoghicp\BigBrother\network\OutboundPacket;
 use shoghicp\BigBrother\utils\ConvertUtils;
 use pocketmine\nbt\tag\NamedTag;
 
-class UpdateBlockEntityPacket extends OutboundPacket{
+class UpdateBlockEntityPacket extends OutboundPacket {
 
 	/** @var int */
 	public $x;
@@ -46,11 +46,11 @@ class UpdateBlockEntityPacket extends OutboundPacket{
 	/** @var NamedTag */
 	public $namedtag;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::UPDATE_BLOCK_ENTITY_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putPosition($this->x, $this->y, $this->z);
 		$this->putByte($this->actionID);
 		$this->put(ConvertUtils::convertNBTDataFromPEtoPC($this->namedtag));

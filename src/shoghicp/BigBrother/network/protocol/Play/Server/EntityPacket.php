@@ -31,16 +31,16 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class EntityPacket extends OutboundPacket{
+class EntityPacket extends OutboundPacket {
 
 	/** @var int */
 	public $eid;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::ENTITY_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putVarInt($this->eid);
 	}
 }

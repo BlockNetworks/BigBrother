@@ -31,23 +31,23 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class PluginMessagePacket extends OutboundPacket{
+class PluginMessagePacket extends OutboundPacket {
 
 	/** @var string */
 	public $channel;
 	/** @var array */
 	public $data = [];
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::PLUGIN_MESSAGE_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putString($this->channel);
-		switch($this->channel){
+		switch ($this->channel) {
 			case "MC|BOpen":
 				$this->putVarInt($this->data[0]);
-			break;
+				break;
 		}
 	}
 }

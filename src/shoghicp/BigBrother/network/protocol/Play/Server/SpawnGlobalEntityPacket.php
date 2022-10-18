@@ -31,7 +31,7 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class SpawnGlobalEntityPacket extends OutboundPacket{
+class SpawnGlobalEntityPacket extends OutboundPacket {
 
 	const TYPE_LIGHTNING = 1;
 
@@ -46,11 +46,11 @@ class SpawnGlobalEntityPacket extends OutboundPacket{
 	/** @var float */
 	public $z;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::SPAWN_GLOBAL_ENTITY_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putVarInt($this->eid);
 		$this->putByte($this->type);
 		$this->putDouble($this->x);

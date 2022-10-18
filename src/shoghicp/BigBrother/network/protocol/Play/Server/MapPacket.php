@@ -31,7 +31,7 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class MapPacket extends OutboundPacket{
+class MapPacket extends OutboundPacket {
 
 	public static $code = 0;
 
@@ -54,25 +54,25 @@ class MapPacket extends OutboundPacket{
 	/** @var string */
 	public $data;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::MAP_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putVarInt($this->itemDamage);
 		$this->putByte($this->scale);
 		$this->putBool($this->trackingPosition);
 
 		$this->putVarInt(0);
 		/*$this->putVarInt(count($this->icons));
-		foreach($this->icons as $icon){
+		foreach ($this->icons as $icon) {
 			$this->putByte($icon->directionAndType);
 			$this->putByte($icon->X);
 			$this->putByte($icon->Z);
 		}*/
 
 		$this->putByte($this->columns);
-		if($this->columns > 0){
+		if ($this->columns > 0) {
 			$this->putByte($this->rows);
 			$this->putByte($this->x);
 			$this->putByte($this->z);

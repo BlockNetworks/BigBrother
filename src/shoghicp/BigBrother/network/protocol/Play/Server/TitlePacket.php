@@ -31,7 +31,7 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class TitlePacket extends OutboundPacket{
+class TitlePacket extends OutboundPacket {
 
 	const TYPE_SET_TITLE = 0;
 	const TYPE_SET_SUB_TITLE = 1;
@@ -45,23 +45,23 @@ class TitlePacket extends OutboundPacket{
 	/** @var string|int[] */
 	public $data = null;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::TITLE_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putVarInt($this->actionID);
-		switch($this->actionID){
+		switch ($this->actionID) {
 			case self::TYPE_SET_TITLE:
 			case self::TYPE_SET_SUB_TITLE:
 			case self::TYPE_SET_ACTION_BAR:
 				$this->putString($this->data);
-			break;
+				break;
 			case self::TYPE_SET_SETTINGS:
 				$this->putInt($this->data[0]);
 				$this->putInt($this->data[1]);
 				$this->putInt($this->data[2]);
-			break;
+				break;
 		}
 	}
 }

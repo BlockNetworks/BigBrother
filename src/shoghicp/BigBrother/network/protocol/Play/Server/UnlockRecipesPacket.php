@@ -31,7 +31,7 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class UnlockRecipesPacket extends OutboundPacket{
+class UnlockRecipesPacket extends OutboundPacket {
 
 	/** @var int */
 	public $actionID;
@@ -44,21 +44,21 @@ class UnlockRecipesPacket extends OutboundPacket{
 	/** @var int[] */
 	public $extraRecipes = [];
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::UNLOCK_RECIPES_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putVarInt($this->actionID);
 		$this->putBool($this->isCraftingBookOpen);
 		$this->putBool($this->isFilteringCraftable);
 		$this->putVarInt(count($this->recipes));
-		foreach($this->recipes as $recipeId){
+		foreach ($this->recipes as $recipeId) {
 			$this->putVarInt($recipeId);
 		}
-		if($this->actionID === 0){
+		if ($this->actionID === 0) {
 			$this->putVarInt(count($this->extraRecipes));
-			foreach($this->extraRecipes as $recipeId){
+			foreach ($this->extraRecipes as $recipeId) {
 				$this->putVarInt($recipeId);
 			}
 		}

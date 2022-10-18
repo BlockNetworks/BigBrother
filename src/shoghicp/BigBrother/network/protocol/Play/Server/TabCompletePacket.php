@@ -31,18 +31,18 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class TabCompletePacket extends OutboundPacket{
+class TabCompletePacket extends OutboundPacket {
 
 	/** @var string[] */
 	public $matches = [];
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::TAB_COMPLETE_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putVarInt(count($this->matches));
-		foreach($this->matches as $match){
+		foreach ($this->matches as $match) {
 			$this->putString($match);
 		}
 	}

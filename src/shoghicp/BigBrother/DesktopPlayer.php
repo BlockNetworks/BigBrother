@@ -71,7 +71,7 @@ use shoghicp\BigBrother\utils\InventoryUtils;
 use shoghicp\BigBrother\utils\RecipeUtils;
 use shoghicp\BigBrother\utils\SkinImage;
 
-class DesktopPlayer extends Player{
+class DesktopPlayer extends Player {
 
 	/** @var int */
 	private $bigBrother_status = 0; //0 = log in, 1 = playing
@@ -122,7 +122,7 @@ class DesktopPlayer extends Player{
 	 * @param int             $port
 	 * @param BigBrother      $plugin
 	 */
-	public function __construct(SourceInterface $interface, string $clientID, string $address, int $port, BigBrother $plugin){
+	public function __construct(SourceInterface $interface, string $clientID, string $address, int $port, BigBrother $plugin) {
 		$this->plugin = $plugin;
 		$this->bigBrother_clientId = $clientID;
 		parent::__construct($interface, $address, $port);
@@ -135,21 +135,21 @@ class DesktopPlayer extends Player{
 	/**
 	 * @return InventoryUtils
 	 */
-	public function getInventoryUtils() : InventoryUtils{
+	public function getInventoryUtils() : InventoryUtils {
 		return $this->inventoryUtils;
 	}
 
 	/**
 	 * @return RecipeUtils
 	 */
-	public function getRecipeUtils() : RecipeUtils{
+	public function getRecipeUtils() : RecipeUtils {
 		return $this->recipeUtils;
 	}
 
 	/**
 	 * @return int dimension
 	 */
-	public function bigBrother_getDimension() : int{
+	public function bigBrother_getDimension() : int {
 		return $this->bigBrother_dimension;
 	}
 
@@ -157,20 +157,20 @@ class DesktopPlayer extends Player{
 	 * @param int $level_dimension
 	 * @return int dimension of pc version converted from $level_dimension
 	 */
-	public function bigBrother_getDimensionPEToPC(int $level_dimension) : int{
+	public function bigBrother_getDimensionPEToPC(int $level_dimension) : int {
 		$dimension = 0;
-		switch($level_dimension){
+		switch($level_dimension) {
 			case GeneratorType::FINITE_OVERWORLD://Over world
 			case GeneratorType::OVERWORLD:
 			case GeneratorType::FLAT:
 				$dimension = 0;
-			break;
+				break;
 			case GeneratorType::NETHER://Nether
 				$dimension = -1;
-			break;
+				break;
 			case GeneratorType::THE_END://The End
 				$dimension = 1;
-			break;
+				break;
 		}
 		$this->bigBrother_dimension = $dimension;
 		return $dimension;
@@ -180,8 +180,8 @@ class DesktopPlayer extends Player{
 	 * @param int    $eid
 	 * @param string $entityType
 	 */
-	public function bigBrother_addEntityList(int $eid, string $entityType) : void{
-		if(!isset($this->bigBrother_entityList[$eid])){
+	public function bigBrother_addEntityList(int $eid, string $entityType) : void {
+		if (!isset($this->bigBrother_entityList[$eid])) {
 			$this->bigBrother_entityList[$eid] = $entityType;
 		}
 	}
@@ -190,8 +190,8 @@ class DesktopPlayer extends Player{
 	 * @param int $eid
 	 * @return string
 	 */
-	public function bigBrother_getEntityList(int $eid) : string{
-		if(isset($this->bigBrother_entityList[$eid])){
+	public function bigBrother_getEntityList(int $eid) : string {
+		if (isset($this->bigBrother_entityList[$eid])) {
 			return $this->bigBrother_entityList[$eid];
 		}
 		return "generic";
@@ -200,8 +200,8 @@ class DesktopPlayer extends Player{
 	/**
 	 * @param int $eid
 	 */
-	public function bigBrother_removeEntityList(int $eid) : void{
-		if(isset($this->bigBrother_entityList[$eid])){
+	public function bigBrother_removeEntityList(int $eid) : void {
+		if (isset($this->bigBrother_entityList[$eid])) {
 			unset($this->bigBrother_entityList[$eid]);
 		}
 	}
@@ -209,21 +209,21 @@ class DesktopPlayer extends Player{
 	/**
 	 * @return array
 	 */
-	public function bigBrother_getClientSetting() : array{
+	public function bigBrother_getClientSetting() : array {
 		return $this->bigBrother_clientSetting;
 	}
 
 	/**
 	 * @param array $clientSetting
 	 */
-	public function bigBrother_setClientSetting(array $clientSetting = []) : void{
+	public function bigBrother_setClientSetting(array $clientSetting = []) : void {
 		$this->bigBrother_clientSetting = $clientSetting;
 	}
 
 	/**
 	 * @return array
 	 */
-	public function bigBrother_getPluginMessageList() : array{
+	public function bigBrother_getPluginMessageList() : array {
 		return $this->bigBrother_pluginMessageList;
 	}
 
@@ -231,21 +231,21 @@ class DesktopPlayer extends Player{
 	 * @param string $channel
 	 * @param array  $data
 	 */
-	public function bigBrother_setPluginMessageList(string $channel = "", array $data = []) : void{
+	public function bigBrother_setPluginMessageList(string $channel = "", array $data = []) : void {
 		$this->bigBrother_pluginMessageList[$channel] = $data;
 	}
 
 	/**
 	 * @return array
 	 */
-	public function bigBrother_getBreakPosition() : array{
+	public function bigBrother_getBreakPosition() : array {
 		return $this->bigBrother_breakPosition;
 	}
 
 	/**
 	 * @param array $positionData
 	 */
-	public function bigBrother_setBreakPosition(array $positionData = []) : void{
+	public function bigBrother_setBreakPosition(array $positionData = []) : void {
 		$this->bigBrother_breakPosition = $positionData;
 	}
 
@@ -253,8 +253,8 @@ class DesktopPlayer extends Player{
 	 * @param  string $bossBarData
 	 * @return string|array
 	 */
-	public function bigBrother_getBossBarData(string $bossBarData = ""){
-		if($bossBarData === ""){
+	public function bigBrother_getBossBarData(string $bossBarData = "") {
+		if ($bossBarData === "") {
 			return $this->bigBrother_bossBarData;
 		}
 		return $this->bigBrother_bossBarData[$bossBarData];
@@ -264,59 +264,54 @@ class DesktopPlayer extends Player{
 	 * @param string $bossBarData
 	 * @param int|string|array $data
 	 */
-	public function bigBrother_setBossBarData(string $bossBarData, $data) : void{
+	public function bigBrother_setBossBarData(string $bossBarData, $data) : void {
 		$this->bigBrother_bossBarData[$bossBarData] = $data;
 	}
 
 	/**
 	 * @return int status
 	 */
-	public function bigBrother_getStatus() : int{
+	public function bigBrother_getStatus() : int {
 		return $this->bigBrother_status;
 	}
 
 	/**
 	 * @return array properties
 	 */
-	public function bigBrother_getProperties() : array{
+	public function bigBrother_getProperties() : array {
 		return $this->bigBrother_properties;
 	}
 
 	/**
 	 * @return string uuid
 	 */
-	public function bigBrother_getUniqueId() : string{
+	public function bigBrother_getUniqueId() : string {
 		return $this->bigBrother_uuid;
 	}
 
 	/**
 	 * @return string formatted uuid
 	 */
-	public function bigBrother_getFormattedUUID() : string{
+	public function bigBrother_getFormattedUUID() : string {
 		return $this->bigBrother_formattedUUID;
 	}
 
 	/**
 	 * @param bool $first
 	 */
-	public function sendAdvancements(bool $first = false) : void{
+	public function sendAdvancements(bool $first = false) : void {
 		$pk = new AdvancementsPacket();
 		$pk->advancements = [
 			[
 				"pocketmine:advancements/root",
-				[
-					false
-				],
+				[false],
 				[
 					true,
 					BigBrother::toJSON("Welcome to PocketMine-MP Server!"),
 					BigBrother::toJSON("Join to PocketMine-MP Server with Minecraft"),
 					Item::get(Item::GRASS),
 					0,
-					[
-						1,
-						"minecraft:textures/blocks/stone.png"
-					],
+					[1, "minecraft:textures/blocks/stone.png"],
 					0,
 					0
 				],
@@ -347,7 +342,7 @@ class DesktopPlayer extends Player{
 		];
 		$this->putRawPacket($pk);
 
-		if($first){
+		if ($first) {
 			$pk = new SelectAdvancementTabPacket();
 			$pk->hasTab = true;
 			$pk->tabId = "pocketmine:advancements/root";
@@ -359,10 +354,10 @@ class DesktopPlayer extends Player{
 	 * @param CraftingGrid $grid
 	 * @override
 	 */
-	public function setCraftingGrid(CraftingGrid $grid) : void{
+	public function setCraftingGrid(CraftingGrid $grid) : void {
 		parent::setCraftingGrid($grid);
 
-		if($grid->getDefaultSize() === 9){//Open Crafting Table
+		if ($grid->getDefaultSize() === 9) {//Open Crafting Table
 			$pk = new ContainerOpenPacket();
 			$pk->windowId = 127;//Max WindowId
 			$pk->type = WindowTypes::WORKBENCH;
@@ -374,7 +369,7 @@ class DesktopPlayer extends Player{
 		}
 	}
 
-	public function setLocale(string $locale) : void{
+	public function setLocale(string $locale) : void {
 		$this->locale = $locale;
 	}
 
@@ -384,10 +379,10 @@ class DesktopPlayer extends Player{
 	 * @param BatchPacket $payload
 	 * @override
 	 */
-	public function sendChunk(int $x, int $z, BatchPacket $payload){
+	public function sendChunk(int $x, int $z, BatchPacket $payload) {
 		parent::sendChunk($x, $z, $payload);
-		if($this->spawned){
-			foreach(ItemFrameBlockEntity::getItemFramesInChunk($this->level, $x, $z) as $frame){
+		if ($this->spawned) {
+			foreach (ItemFrameBlockEntity::getItemFramesInChunk($this->level, $x, $z) as $frame) {
 				/** @var ItemFrameBlockEntity $frame */
 				$frame->spawnTo($this);
 			}
@@ -400,7 +395,7 @@ class DesktopPlayer extends Player{
 	 * @param Level|null $level
 	 * @override
 	 */
-	protected function unloadChunk(int $x, int $z, ?Level $level = null){
+	protected function unloadChunk(int $x, int $z, ?Level $level = null) {
 		parent::unloadChunk($x, $z, $level);
 
 		$pk = new UnloadChunkPacket();
@@ -408,7 +403,7 @@ class DesktopPlayer extends Player{
 		$pk->chunkZ = $z;
 		$this->putRawPacket($pk);
 
-		foreach(ItemFrameBlockEntity::getItemFramesInChunk($level ?? $this->level, $x, $z) as $frame){
+		foreach (ItemFrameBlockEntity::getItemFramesInChunk($level ?? $this->level, $x, $z) as $frame) {
 			/** @var ItemFrameBlockEntity $frame */
 			$frame->despawnFrom($this);
 		}
@@ -418,9 +413,9 @@ class DesktopPlayer extends Player{
 	 * @param Chunk $chunk
 	 * @override
 	 */
-	public function onChunkUnloaded(Chunk $chunk){
-		if($this->loggedIn){
-			foreach(ItemFrameBlockEntity::getItemFramesInChunk($this->level, $chunk->getX(), $chunk->getZ()) as $frame){
+	public function onChunkUnloaded(Chunk $chunk) {
+		if ($this->loggedIn) {
+			foreach (ItemFrameBlockEntity::getItemFramesInChunk($this->level, $chunk->getX(), $chunk->getZ()) as $frame) {
 				/** @var ItemFrameBlockEntity $frame */
 				$frame->despawnFromAll();
 			}
@@ -433,7 +428,7 @@ class DesktopPlayer extends Player{
 	 * @param bool $signedByMojang
 	 * @override
 	 */
-	public function onVerifyCompleted(LoginPacket $packet, ?string $error, bool $signedByMojang) : void{
+	public function onVerifyCompleted(LoginPacket $packet, ?string $error, bool $signedByMojang) : void {
 		parent::onVerifyCompleted($packet, null, true);
 
 		$pk = new ResourcePackClientResponsePacket();
@@ -465,7 +460,7 @@ class DesktopPlayer extends Player{
 		$this->sendAdvancements(true);
 	}
 
-	private function generateClientDataJWT(): string{
+	private function generateClientDataJWT(): string {
 		$headB64 = base64_encode(json_encode([
 			"x5u" => VerifyLoginTask::MOJANG_ROOT_PUBLIC_KEY
 		]));
@@ -475,7 +470,7 @@ class DesktopPlayer extends Player{
 		return implode(".", [$headB64, $payloadB64, $sigB64]);
 	}
 
-	public function bigBrother_respawn() : void{
+	public function bigBrother_respawn() : void {
 		$pk = new PlayerPositionAndLookPacket();
 		$pk->x = $this->getX();
 		$pk->y = $this->getY();
@@ -485,7 +480,7 @@ class DesktopPlayer extends Player{
 		$pk->flags = 0;
 		$this->putRawPacket($pk);
 
-		foreach($this->usedChunks as $index => $d){//reset chunks
+		foreach ($this->usedChunks as $index => $d) {//reset chunks
 			Level::getXZ($index, $chunkX, $chunkZ);
 			$this->unloadChunk($chunkX, $chunkZ);
 		}
@@ -497,8 +492,8 @@ class DesktopPlayer extends Player{
 	 * @param string     $uuid
 	 * @param array|null $onlineModeData
 	 */
-	public function bigBrother_authenticate(string $uuid, ?array $onlineModeData = null) : void{
-		if($this->bigBrother_status === 0){
+	public function bigBrother_authenticate(string $uuid, ?array $onlineModeData = null) : void {
+		if ($this->bigBrother_status === 0) {
 			$this->bigBrother_uuid = $uuid;
 			$this->bigBrother_formattedUUID = Binary::UUIDtoString($this->bigBrother_uuid);
 
@@ -511,37 +506,37 @@ class DesktopPlayer extends Player{
 
 			$this->bigBrother_status = 1;
 
-			if($onlineModeData !== null){
+			if ($onlineModeData !== null) {
 				$this->bigBrother_properties = $onlineModeData;
 			}
 
 			$model = false;
 			$skinImage = "";
 			$capeImage = "";
-			foreach($this->bigBrother_properties as $property){
-				if($property["name"] === "textures"){
+			foreach ($this->bigBrother_properties as $property) {
+				if ($property["name"] === "textures") {
 					$textures = json_decode(base64_decode($property["value"]), true);
 
-					if(isset($textures["textures"]["SKIN"])){
-						if(isset($textures["textures"]["SKIN"]["metadata"]["model"])){
+					if (isset($textures["textures"]["SKIN"])) {
+						if (isset($textures["textures"]["SKIN"]["metadata"]["model"])) {
 							$model = true;
 						}
 
 						$skinImage = file_get_contents($textures["textures"]["SKIN"]["url"]);
-					}else{
+					} else {
 						/*
 						 * Detect whether the player has the “Alex?” or “Steve?”
 						 * Ref) https://github.com/mapcrafter/mapcrafter-playermarkers/blob/c583dd9157a041a3c9ec5c68244f73b8d01ac37a/playermarkers/player.php#L8-L19
 						 */
-						if((bool) (array_reduce(str_split($uuid, 8), function($acm, $val) { return $acm ^ hexdec($val); }, 0) % 2)){
+						if ((bool) (array_reduce(str_split($uuid, 8), function($acm, $val) { return $acm ^ hexdec($val); }, 0) % 2)) {
 							$skinImage = file_get_contents("http://assets.mojang.com/SkinTemplates/alex.png");
 							$model = true;
-						}else{
+						} else {
 							$skinImage = file_get_contents("http://assets.mojang.com/SkinTemplates/steve.png");
 						}
 					}
 
-					if(isset($textures["textures"]["CAPE"])){
+					if (isset($textures["textures"]["CAPE"])) {
 						$capeImage = file_get_contents($textures["textures"]["CAPE"]["url"]);
 					}
 				}
@@ -568,10 +563,10 @@ class DesktopPlayer extends Player{
 			$pk->clientData["PersonaPieces"] = [];
 			$pk->clientData["PieceTintColors"] = [];
 
-			if($model){
+			if ($model) {
 				$pk->clientData["SkinId"] = $this->bigBrother_formattedUUID."_CustomSlim";
 				$pk->clientData["SkinResourcePatch"] = base64_encode(json_encode(["geometry" => ["default" => "geometry.humanoid.customSlim"]]));
-			}else{
+			} else {
 				$pk->clientData["SkinId"] = $this->bigBrother_formattedUUID."_Custom";
 				$pk->clientData["SkinResourcePatch"] = base64_encode(json_encode(["geometry" => ["default" => "geometry.humanoid.custom"]]));
 			}
@@ -594,8 +589,8 @@ class DesktopPlayer extends Player{
 		}
 	}
 
-	private function getSkinImageSize(int $skinImageLength) : array{
-		switch($skinImageLength){
+	private function getSkinImageSize(int $skinImageLength) : array {
+		switch($skinImageLength) {
 			case 64 * 32 * 4:
 				return [64, 32];
 			case 64 * 64 * 4:
@@ -612,13 +607,13 @@ class DesktopPlayer extends Player{
 	/**
 	 * @param EncryptionResponsePacket $packet
 	 */
-	public function bigBrother_processAuthentication(EncryptionResponsePacket $packet) : void{
+	public function bigBrother_processAuthentication(EncryptionResponsePacket $packet) : void {
 		$this->bigBrother_secret = $this->plugin->decryptBinary($packet->sharedSecret);
 		$token = $this->plugin->decryptBinary($packet->verifyToken);
 		$this->interface->enableEncryption($this, $this->bigBrother_secret);
-		if($token !== $this->bigBrother_checkToken){
+		if ($token !== $this->bigBrother_checkToken) {
 			$this->close("", "Invalid check token");
-		}else{
+		} else {
 			$username = $this->bigBrother_username;
 			$hash = Binary::sha1("".$this->bigBrother_secret.$this->plugin->getASN1PublicKey());
 
@@ -634,7 +629,7 @@ class DesktopPlayer extends Player{
 				 * @param string $username
 				 * @param string $hash
 				 */
-				public function __construct(DesktopPlayer $player, string $username, string $hash){
+				public function __construct(DesktopPlayer $player, string $username, string $hash) {
 					self::storeLocal($player);
 					$this->username = $username;
 					$this->hash = $hash;
@@ -643,7 +638,7 @@ class DesktopPlayer extends Player{
 				/**
 				 * @override
 				 */
-				public function onRun(){
+				public function onRun() {
 					$result = null;
 
 					$query = http_build_query([
@@ -652,7 +647,7 @@ class DesktopPlayer extends Player{
 					]);
 
 					$response = Internet::getURL("https://sessionserver.mojang.com/session/minecraft/hasJoined?".$query, 5, [], $err, $header, $status);
-					if($response === false || $status !== 200){
+					if ($response === false || $status !== 200) {
 						$this->publishProgress("InternetException: failed to fetch session data for '$this->username'; status=$status; err=$err; response_header=".json_encode($header));
 						$this->setResult(false);
 						return;
@@ -666,7 +661,7 @@ class DesktopPlayer extends Player{
 				 * @param Server $server
 				 * @param mixed $progress
 				 */
-				public function onProgressUpdate(Server $server, $progress){
+				public function onProgressUpdate(Server $server, $progress) {
 					$server->getLogger()->error($progress);
 				}
 
@@ -674,13 +669,13 @@ class DesktopPlayer extends Player{
 				 * @override
 				 * @param $server
 				 */
-				public function onCompletion(Server $server){
+				public function onCompletion(Server $server) {
 					$result = $this->getResult();
 					/** @var DesktopPlayer $player */
 					$player = self::fetchLocal();
-					if(is_array($result) and isset($result["id"])){
+					if (is_array($result) and isset($result["id"])) {
 						$player->bigBrother_authenticate($result["id"], $result["properties"]);
-					}else{
+					} else {
 						$player->close("", "User not premium");
 					}
 				}
@@ -692,19 +687,19 @@ class DesktopPlayer extends Player{
 	 * @param string $username
 	 * @param bool $onlineMode
 	 */
-	public function bigBrother_handleAuthentication(string $username, bool $onlineMode = false) : void{
-		if($this->bigBrother_status === 0){
+	public function bigBrother_handleAuthentication(string $username, bool $onlineMode = false) : void {
+		if ($this->bigBrother_status === 0) {
 			$this->bigBrother_username = $username;
-			if($onlineMode){
+			if ($onlineMode) {
 				$pk = new EncryptionRequestPacket();
 				$pk->serverID = "";
 				$pk->publicKey = $this->plugin->getASN1PublicKey();
 				$pk->verifyToken = $this->bigBrother_checkToken = str_repeat("\x00", 4);
 				$this->putRawPacket($pk);
-			}else{
-				if(!is_null(($info = $this->plugin->getProfileCache($username)))){
+			} else {
+				if (!is_null(($info = $this->plugin->getProfileCache($username)))) {
 					$this->bigBrother_authenticate($info["id"], $info["properties"]);
-				}else{
+				} else {
 					$this->getServer()->getAsyncPool()->submitTask(new class($this->plugin, $this, $username) extends AsyncTask{
 
 						/** @var string */
@@ -715,7 +710,7 @@ class DesktopPlayer extends Player{
 						 * @param DesktopPlayer $player
 						 * @param string $username
 						 */
-						public function __construct(BigBrother $plugin, DesktopPlayer $player, string $username){
+						public function __construct(BigBrother $plugin, DesktopPlayer $player, string $username) {
 							self::storeLocal([$plugin, $player]);
 							$this->username = $username;
 						}
@@ -723,12 +718,12 @@ class DesktopPlayer extends Player{
 						/**
 						 * @override
 						 */
-						public function onRun(){
+						public function onRun() {
 							$profile = null;
 							$info = null;
 
 							$response = Internet::getURL("https://api.mojang.com/users/profiles/minecraft/".$this->username, 10, [], $err, $header, $status);
-							if($status === 204){
+							if ($status === 204) {
 								$this->publishProgress("UserNotFound: failed to fetch profile for '$this->username'; status=$status; err=$err; response_header=".json_encode($header));
 								$this->setResult([
 									"id" => str_replace("-", "", UUID::fromRandom()->toString()),
@@ -738,14 +733,14 @@ class DesktopPlayer extends Player{
 								return;
 							}
 
-							if($response === false || $status !== 200){
+							if ($response === false || $status !== 200) {
 								$this->publishProgress("InternetException: failed to fetch profile for '$this->username'; status=$status; err=$err; response_header=".json_encode($header));
 								$this->setResult(false);
 								return;
 							}
 
 							$profile = json_decode($response, true);
-							if(!is_array($profile)){
+							if (!is_array($profile)) {
 								$this->publishProgress("UnknownError: failed to parse profile for '$this->username'; status=$status; response=$response; response_header=".json_encode($header));
 								$this->setResult(false);
 								return;
@@ -753,14 +748,14 @@ class DesktopPlayer extends Player{
 
 							$uuid = $profile["id"];
 							$response = Internet::getURL("https://sessionserver.mojang.com/session/minecraft/profile/".$uuid, 3, [], $err, $header, $status);
-							if($response === false || $status !== 200){
+							if ($response === false || $status !== 200) {
 								$this->publishProgress("InternetException: failed to fetch profile info for '$this->username'; status=$status; err=$err; response_header=".json_encode($header));
 								$this->setResult(false);
 								return;
 							}
 
 							$info = json_decode($response, true);
-							if($info === null or !isset($info["id"])){
+							if ($info === null or !isset($info["id"])) {
 								$this->publishProgress("UnknownError: failed to parse profile info for '$this->username'; status=$status; response=$response; response_header=".json_encode($header));
 								$this->setResult(false);
 								return;
@@ -774,7 +769,7 @@ class DesktopPlayer extends Player{
 						 * @param Server $server
 						 * @param mixed $progress
 						 */
-						public function onProgressUpdate(Server $server, $progress){
+						public function onProgressUpdate(Server $server, $progress) {
 							$server->getLogger()->error($progress);
 						}
 
@@ -782,9 +777,9 @@ class DesktopPlayer extends Player{
 						 * @override
 						 * @param Server $server
 						 */
-						public function onCompletion(Server $server){
+						public function onCompletion(Server $server) {
 							$info = $this->getResult();
-							if(is_array($info)){
+							if (is_array($info)) {
 								list($plugin, $player) = self::fetchLocal();
 
 								/** @var BigBrother $plugin */
@@ -806,8 +801,8 @@ class DesktopPlayer extends Player{
 	 * @override
 	 * @throws
 	 */
-	public function handleDataPacket(DataPacket $packet){
-		if($this->isConnected() === false){
+	public function handleDataPacket(DataPacket $packet) {
+		if ($this->isConnected() === false) {
 			return;
 		}
 
@@ -816,7 +811,7 @@ class DesktopPlayer extends Player{
 
 		$ev = new DataPacketReceiveEvent($this, $packet);
 		$ev->call();
-		if(!$ev->isCancelled() and !$packet->handle($this->sessionAdapter)){
+		if (!$ev->isCancelled() and !$packet->handle($this->sessionAdapter)) {
 			$this->getServer()->getLogger()->debug("Unhandled " . $packet->getName() . " received from " . $this->getName() . ": 0x" . bin2hex($packet->buffer));
 		}
 
@@ -826,7 +821,7 @@ class DesktopPlayer extends Player{
 	/**
 	 * @param Packet $packet
 	 */
-	public function putRawPacket(Packet $packet) : void{
+	public function putRawPacket(Packet $packet) : void {
 		$this->interface->putRawPacket($this, $packet);
 	}
 }

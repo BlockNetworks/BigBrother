@@ -36,11 +36,11 @@ class LoginStartPacket extends InboundPacket{
 	/** @var string */
 	public $name;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::LOGIN_START_PACKET;
 	}
 
-	protected function decode() : void{
+	protected function decode() : void {
 		$this->name = $this->getString();
 	}
 }

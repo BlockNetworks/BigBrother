@@ -31,7 +31,7 @@ namespace shoghicp\BigBrother\network;
 
 use ErrorException;
 
-abstract class OutboundPacket extends Packet{
+abstract class OutboundPacket extends Packet {
 
 	//Play
 	const SPAWN_OBJECT_PACKET = 0x00;
@@ -125,7 +125,7 @@ abstract class OutboundPacket extends Packet{
 	 * @deprecated
 	 * @throws
 	 */
-	protected final function decode() : void{
+	protected final function decode() : void {
 		throw new ErrorException(get_class($this) . " is subclass of OutboundPacket: don't call decode() method");
 	}
 }

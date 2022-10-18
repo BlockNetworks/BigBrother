@@ -31,7 +31,7 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class OpenWindowPacket extends OutboundPacket{
+class OpenWindowPacket extends OutboundPacket {
 
 	/** @var int */
 	public $windowID;
@@ -44,16 +44,16 @@ class OpenWindowPacket extends OutboundPacket{
 	/** @var int */
 	public $entityId = -1;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::OPEN_WINDOW_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putByte($this->windowID);
 		$this->putString($this->inventoryType);
 		$this->putString($this->windowTitle);
 		$this->putByte($this->slots);
-		if($this->entityId !== -1){
+		if ($this->entityId !== -1) {
 			$this->putInt($this->entityId);
 		}
 	}

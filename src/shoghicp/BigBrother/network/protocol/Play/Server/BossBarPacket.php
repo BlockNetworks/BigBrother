@@ -31,7 +31,7 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class BossBarPacket extends OutboundPacket{
+class BossBarPacket extends OutboundPacket {
 
 	const TYPE_ADD = 0;
 	const TYPE_REMOVE = 1;
@@ -78,35 +78,35 @@ class BossBarPacket extends OutboundPacket{
 	/** @var int */
 	public $flags = 0;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::BOSS_BAR_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->put($this->uuid);
 		$this->putVarInt($this->actionID);
-		switch($this->actionID){
+		switch ($this->actionID) {
 			case self::TYPE_ADD:
 				$this->putString($this->title);
 				$this->putFloat($this->health);
 				$this->putVarInt($this->color);
 				$this->putVarInt($this->division);
 				$this->putByte($this->flags);
-			break;
+				break;
 			case self::TYPE_REMOVE:
-			break;
+				break;
 			case self::TYPE_UPDATE_HEALTH:
 				$this->putFloat($this->health);
-			break;
+				break;
 			case self::TYPE_UPDATE_TITLE:
 				$this->putString($this->title);
-			break;
+				break;
 			case self::TYPE_UPDATE_COLOR:
 				$this->putVarInt($this->color);
-			break;
+				break;
 			case self::TYPE_UPDATE_FLAGS:
 				$this->putByte($this->flags);
-			break;
+				break;
 		}
 	}
 }

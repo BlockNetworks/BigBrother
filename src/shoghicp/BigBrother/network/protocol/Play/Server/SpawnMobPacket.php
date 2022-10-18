@@ -32,7 +32,7 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 use shoghicp\BigBrother\network\OutboundPacket;
 use shoghicp\BigBrother\utils\Binary;
 
-class SpawnMobPacket extends OutboundPacket{
+class SpawnMobPacket extends OutboundPacket {
 
 	/** @var int */
 	public $eid;
@@ -61,11 +61,11 @@ class SpawnMobPacket extends OutboundPacket{
 	/** @var array */
 	public $metadata;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::SPAWN_MOB_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putVarInt($this->eid);
 		$this->put($this->uuid);
 		$this->putVarInt($this->type);

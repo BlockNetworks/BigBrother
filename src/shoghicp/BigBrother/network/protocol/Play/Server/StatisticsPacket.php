@@ -31,20 +31,20 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class StatisticsPacket extends OutboundPacket{
+class StatisticsPacket extends OutboundPacket {
 
 	/** @var int */
 	public $count;
 	/** @var array */
 	public $statistic = [];
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::STATISTICS_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putVarInt($this->count);
-		foreach($this->statistic as $statistic){
+		foreach ($this->statistic as $statistic) {
 			$this->putString($statistic[0]);
 			$this->putVarInt($statistic[1]);
 		}

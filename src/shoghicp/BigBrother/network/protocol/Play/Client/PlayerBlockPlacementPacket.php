@@ -31,7 +31,7 @@ namespace shoghicp\BigBrother\network\protocol\Play\Client;
 
 use shoghicp\BigBrother\network\InboundPacket;
 
-class PlayerBlockPlacementPacket extends InboundPacket{
+class PlayerBlockPlacementPacket extends InboundPacket {
 
 	/** @var int */
 	public $x;
@@ -50,11 +50,11 @@ class PlayerBlockPlacementPacket extends InboundPacket{
 	/** @var float */
 	public $cursorZ;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::PLAYER_BLOCK_PLACEMENT_PACKET;
 	}
 
-	protected function decode() : void{
+	protected function decode() : void {
 		$this->getPosition($this->x, $this->y, $this->z);
 		$this->direction = $this->getVarInt();
 		$this->hand = $this->getVarInt();

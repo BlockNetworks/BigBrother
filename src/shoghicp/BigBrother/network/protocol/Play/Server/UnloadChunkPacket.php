@@ -31,18 +31,18 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class UnloadChunkPacket extends OutboundPacket{
+class UnloadChunkPacket extends OutboundPacket {
 
 	/** @var int */
 	public $chunkX;
 	/** @var int */
 	public $chunkZ;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::UNLOAD_CHUNK_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putInt($this->chunkX);
 		$this->putInt($this->chunkZ);
 	}

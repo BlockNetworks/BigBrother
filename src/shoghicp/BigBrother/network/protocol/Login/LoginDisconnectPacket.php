@@ -31,16 +31,16 @@ namespace shoghicp\BigBrother\network\protocol\Login;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class LoginDisconnectPacket extends OutboundPacket{
+class LoginDisconnectPacket extends OutboundPacket {
 
 	/** @var string */
 	public $reason;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::LOGIN_DISCONNECT_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putString($this->reason);
 	}
 }

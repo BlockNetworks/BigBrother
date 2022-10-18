@@ -31,7 +31,7 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class SpawnPaintingPacket extends OutboundPacket{
+class SpawnPaintingPacket extends OutboundPacket {
 
 	/** @var int */
 	public $eid;
@@ -49,11 +49,11 @@ class SpawnPaintingPacket extends OutboundPacket{
 	public $direction;
 	
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::SPAWN_PAINTING_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putVarInt($this->eid);
 		$this->put($this->uuid);
 		$this->putString($this->title);

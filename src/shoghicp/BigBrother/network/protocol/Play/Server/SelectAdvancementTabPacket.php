@@ -31,20 +31,20 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class SelectAdvancementTabPacket extends OutboundPacket{
+class SelectAdvancementTabPacket extends OutboundPacket {
 
 	/** @var bool */
 	public $hasTab = false;
 	/** @var string */
 	public $tabId = "";
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::SELECT_ADVANCEMENT_TAB_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putBool($this->hasTab);
-		if($this->hasTab){
+		if ($this->hasTab) {
 			$this->putString($this->tabId);
 		}
 	}

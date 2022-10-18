@@ -32,7 +32,7 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 use shoghicp\BigBrother\network\OutboundPacket;
 use pocketmine\item\Item;
 
-class EntityEquipmentPacket extends OutboundPacket{
+class EntityEquipmentPacket extends OutboundPacket {
 
 	/** @var int */
 	public $eid;
@@ -41,11 +41,11 @@ class EntityEquipmentPacket extends OutboundPacket{
 	/** @var Item */
 	public $item;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::ENTITY_EQUIPMENT_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putVarInt($this->eid);
 		$this->putVarInt($this->slot);
 		$this->putSlot($this->item);

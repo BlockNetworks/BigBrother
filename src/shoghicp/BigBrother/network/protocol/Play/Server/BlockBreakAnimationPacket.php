@@ -31,7 +31,7 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class BlockBreakAnimationPacket extends OutboundPacket{
+class BlockBreakAnimationPacket extends OutboundPacket {
 
 	/** @var int */
 	public $eid;
@@ -44,11 +44,11 @@ class BlockBreakAnimationPacket extends OutboundPacket{
 	/** @var int */
 	public $destroyStage;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::BLOCK_BREAK_ANIMATION_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putVarInt($this->eid);
 		$this->putPosition($this->x, $this->y, $this->z);
 		$this->putByte($this->destroyStage);

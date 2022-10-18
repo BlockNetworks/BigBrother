@@ -31,7 +31,7 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class RespawnPacket extends OutboundPacket{
+class RespawnPacket extends OutboundPacket {
 
 	/** @var int */
 	public $dimension;
@@ -42,11 +42,11 @@ class RespawnPacket extends OutboundPacket{
 	/** @var string */
 	public $levelType;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::RESPAWN_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putInt($this->dimension);
 		$this->putByte($this->difficulty);
 		$this->putByte($this->gamemode);

@@ -31,16 +31,16 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class PlayDisconnectPacket extends OutboundPacket{
+class PlayDisconnectPacket extends OutboundPacket {
 
 	/** @var string */
 	public $reason;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::PLAY_DISCONNECT_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putString($this->reason);
 	}
 }

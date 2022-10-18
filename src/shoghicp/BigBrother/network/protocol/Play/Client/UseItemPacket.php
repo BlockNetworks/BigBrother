@@ -31,16 +31,16 @@ namespace shoghicp\BigBrother\network\protocol\Play\Client;
 
 use shoghicp\BigBrother\network\InboundPacket;
 
-class UseItemPacket extends InboundPacket{
+class UseItemPacket extends InboundPacket {
 
 	/** @var int */
 	public $hand;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::USE_ITEM_PACKET;
 	}
 
-	protected function decode() : void{
+	protected function decode() : void {
 		$this->hand = $this->getVarInt();
 	}
 }

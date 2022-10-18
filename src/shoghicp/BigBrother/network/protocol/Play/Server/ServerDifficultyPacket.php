@@ -31,16 +31,16 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class ServerDifficultyPacket extends OutboundPacket{
+class ServerDifficultyPacket extends OutboundPacket {
 
 	/** @var int */
 	public $difficulty;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::SERVER_DIFFICULTY_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putByte($this->difficulty);
 	}
 }

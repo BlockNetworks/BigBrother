@@ -31,20 +31,20 @@ namespace shoghicp\BigBrother\network\protocol\Status;
 
 use shoghicp\BigBrother\network\Packet;
 
-class PingPacket extends Packet{
+class PingPacket extends Packet {
 
 	/** @var int */
 	public $time;
 
-	public function pid() : int{
+	public function pid() : int {
 		return 0x01;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putLong($this->time);
 	}
 
-	protected function decode() : void{
+	protected function decode() : void {
 		$this->time = $this->getLong();
 	}
 }

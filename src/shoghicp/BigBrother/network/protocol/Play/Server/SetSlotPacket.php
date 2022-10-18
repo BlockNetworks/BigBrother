@@ -32,7 +32,7 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 use shoghicp\BigBrother\network\OutboundPacket;
 use pocketmine\item\Item;
 
-class SetSlotPacket extends OutboundPacket{
+class SetSlotPacket extends OutboundPacket {
 
 	/** @var int */
 	public $windowID;
@@ -41,11 +41,11 @@ class SetSlotPacket extends OutboundPacket{
 	/** @var Item */
 	public $item;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::SET_SLOT_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putByte($this->windowID);
 		$this->putShort($this->slot);
 		$this->putSlot($this->item);

@@ -31,43 +31,43 @@ namespace shoghicp\BigBrother\network\protocol\Play\Client;
 
 use shoghicp\BigBrother\network\InboundPacket;
 
-class PluginMessagePacket extends InboundPacket{
+class PluginMessagePacket extends InboundPacket {
 
 	/** @var string */
 	public $channel;
 	/** @var string[] */
 	public $data = [];
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::PLUGIN_MESSAGE_PACKET;
 	}
 
-	protected function decode() : void{
+	protected function decode() : void {
 		$this->channel = $this->getString();
-		switch($this->channel){
+		switch ($this->channel) {
 			case "REGISTER":
 				$channels = bin2hex($this->getString());
 				$channels = str_split($channels, 2);
 				$string = "";
-				foreach($channels as $num => $str){
-					if($str === "00"){
+				foreach ($channels as $num => $str) {
+					if ($str === "00") {
 						$this->data[] = hex2bin($string);
 						$string = "";
-					}else{
+					} else {
 						$string .= $str;
-						if(count($channels) -1 === $num){
+						if (count($channels) -1 === $num) {
 							$this->data[] = hex2bin($string);
 						}
 					}
 				}
-			break;
+				break;
 			case "MC|Brand":
 				$this->data[] = $this->getString();
-			break;
+				break;
 			case "MC|BEdit":
 			case "MC|BSign":
 				$this->data[] = $this->getSlot();
-			break;
+				break;
 		}
 	}
 }

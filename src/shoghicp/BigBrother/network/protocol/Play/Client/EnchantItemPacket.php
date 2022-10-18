@@ -31,18 +31,18 @@ namespace shoghicp\BigBrother\network\protocol\Play\Client;
 
 use shoghicp\BigBrother\network\InboundPacket;
 
-class EnchantItemPacket extends InboundPacket{
+class EnchantItemPacket extends InboundPacket {
 
 	/** @var int */
 	public $windowID;
 	/** @var int */
 	public $enchantment;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::ENCHANT_ITEM_PACKET;
 	}
 
-	protected function decode() : void{
+	protected function decode() : void {
 		$this->windowID = $this->getSignedByte();
 		$this->enchantment = $this->getSignedByte();
 	}

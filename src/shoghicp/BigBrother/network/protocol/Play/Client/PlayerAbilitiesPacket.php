@@ -31,7 +31,7 @@ namespace shoghicp\BigBrother\network\protocol\Play\Client;
 
 use shoghicp\BigBrother\network\InboundPacket;
 
-class PlayerAbilitiesPacket extends InboundPacket{
+class PlayerAbilitiesPacket extends InboundPacket {
 
 	/** @var bool */
 	public $damageDisabled = false;
@@ -47,11 +47,11 @@ class PlayerAbilitiesPacket extends InboundPacket{
 	/** @var float */
 	public $walkingSpeed;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::PLAYER_ABILITIES_PACKET;
 	}
 
-	protected function decode() : void{
+	protected function decode() : void {
 		$flags = $this->getSignedByte();
 
 		$this->damageDisabled = ($flags & 0x08) !== 0;

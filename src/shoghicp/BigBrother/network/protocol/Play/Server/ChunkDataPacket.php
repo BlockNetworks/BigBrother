@@ -32,7 +32,7 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 use shoghicp\BigBrother\network\OutboundPacket;
 use shoghicp\BigBrother\utils\ConvertUtils;
 
-class ChunkDataPacket extends OutboundPacket{
+class ChunkDataPacket extends OutboundPacket {
 
 	/** @var int */
 	public $chunkX;
@@ -49,25 +49,25 @@ class ChunkDataPacket extends OutboundPacket{
 	/** @var array */
 	public $blockEntities = [];
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::CHUNK_DATA_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putInt($this->chunkX);
 		$this->putInt($this->chunkZ);
 		$this->putBool($this->groundUp);
 		$this->putVarInt($this->primaryBitmap);
-		if($this->groundUp){
+		if ($this->groundUp) {
 			$this->putVarInt(strlen($this->payload.$this->biomes));
 			$this->put($this->payload);
 			$this->put($this->biomes);
-		}else{
+		} else {
 			$this->putVarInt(strlen($this->payload));
 			$this->put($this->payload);
 		}
 		$this->putVarInt(count($this->blockEntities));
-		foreach($this->blockEntities as $blockEntity){
+		foreach ($this->blockEntities as $blockEntity) {
 			$this->put(ConvertUtils::convertNBTDataFromPEtoPC(ConvertUtils::convertBlockEntity(true, $blockEntity)));
 		}
 	}

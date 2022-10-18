@@ -31,7 +31,7 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class ParticlePacket extends OutboundPacket{
+class ParticlePacket extends OutboundPacket {
 
 	/** @var int */
 	public $id;
@@ -56,11 +56,11 @@ class ParticlePacket extends OutboundPacket{
 	/** @var array */
 	public $addData = [];
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::PARTICLE_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putInt($this->id);
 		$this->putBool($this->longDistance);
 		$this->putFloat($this->x);
@@ -71,7 +71,7 @@ class ParticlePacket extends OutboundPacket{
 		$this->putFloat($this->offsetZ);
 		$this->putFloat($this->data);
 		$this->putInt($this->count);
-		foreach($this->addData as $addData){
+		foreach ($this->addData as $addData) {
 			$this->putVarInt($addData);
 		}
 	}

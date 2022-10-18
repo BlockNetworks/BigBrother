@@ -31,16 +31,16 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class CloseWindowPacket extends OutboundPacket{
+class CloseWindowPacket extends OutboundPacket {
 
 	/** @var int */
 	public $windowID;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::CLOSE_WINDOW_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putByte($this->windowID);
 	}
 }

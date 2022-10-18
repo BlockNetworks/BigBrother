@@ -32,18 +32,18 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 use shoghicp\BigBrother\network\OutboundPacket;
 use shoghicp\BigBrother\utils\Binary;
 
-class EntityMetadataPacket extends OutboundPacket{
+class EntityMetadataPacket extends OutboundPacket {
 
 	/** @var int */
 	public $eid;
 	/** @var array */
 	public $metadata;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::ENTITY_METADATA_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putVarInt($this->eid);
 		$this->put(Binary::writeMetadata($this->metadata));
 	}

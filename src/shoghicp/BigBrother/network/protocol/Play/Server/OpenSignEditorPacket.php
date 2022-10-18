@@ -31,7 +31,7 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class OpenSignEditorPacket extends OutboundPacket{
+class OpenSignEditorPacket extends OutboundPacket {
 
 	/** @var int */
 	public $x;
@@ -40,11 +40,11 @@ class OpenSignEditorPacket extends OutboundPacket{
 	/** @var int */
 	public $z;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::OPEN_SIGN_EDITOR_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putPosition($this->x, $this->y, $this->z);
 	}
 }

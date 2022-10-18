@@ -31,7 +31,7 @@ namespace shoghicp\BigBrother\utils;
 
 use pocketmine\utils\BinaryStream;
 
-class PNGParser{
+class PNGParser {
 	const PNGFileSignature = "\x89\x50\x4e\x47\x0d\x0a\x1a\x0a";
 
 	private $stream;
@@ -43,63 +43,63 @@ class PNGParser{
 	private $rawImageData = "";
 	private $usedBit = 0, $usedBitNum = 0;
 
-	public function __construct($binary = ""){
+	public function __construct($binary = "") {
 		$this->stream = new BinaryStream($binary);
-		if($binary !== ""){
+		if ($binary !== "") {
 			$this->read();
 		}
 	}
 
-	public function getWidth() : int{
+	public function getWidth() : int {
 		return $this->width;
 	}
 
-	public function getHeight() : int{
+	public function getHeight() : int {
 		return $this->height;
 	}
 
-	public function getRGBA($x, $z) : array{
-		if(isset($this->pixelData[$x][$z])){
+	public function getRGBA($x, $z) : array {
+		if (isset($this->pixelData[$x][$z])) {
 			return $this->pixelData[$x][$z];
 		}
 
 		return [0, 0, 0, 0];//Don't change it.
 	}
 
-	public function getBinary() : string{
+	public function getBinary() : string {
 		return $this->stream->getBuffer();
 	}
 
-	private function read(){
-		if($this->stream->get(8) !== self::PNGFileSignature){
+	private function read() {
+		if ($this->stream->get(8) !== self::PNGFileSignature) {
 			$this->stream->reset();
 			echo "Error\n";
 			return;
 		}
 
-		while(!$this->stream->feof()){
+		while (!$this->stream->feof()) {
 			$length = $this->stream->getInt();
 			$chunkType = $this->stream->get(4);
 
-			switch($chunkType){
+			switch ($chunkType) {
 				case "IHDR":
 					$this->readIHDR();
-				break;
+					break;
 				case "PLTE":
 					$this->readPLTE($length);
-				break;
+					break;
 				case "IDAT":
 					$this->readIDAT($length);
-				break;
+					break;
 				case "IEND":
 					$this->readIEND($length);
-				break;
+					break;
 				case "tRNS":
 					$this->readtRNS($length);
-				break;
+					break;
 				default:
 					$this->stream->offset += $length;
-				break;
+					break;
 			}
 
 			$this->stream->getInt();//crc32
@@ -108,7 +108,7 @@ class PNGParser{
 		$this->readAllIDAT();
 	}
 
-	private function readIHDR(){
+	private function readIHDR() {
 		$this->setWidth($this->stream->getInt());
 		$this->setHeight($this->stream->getInt());
 		$this->bitDepth = $this->stream->getByte();
@@ -117,22 +117,22 @@ class PNGParser{
 		$this->filterMethod = $this->stream->getByte();
 		$this->interlaceMethod = $this->stream->getByte();
 
-		if($this->colorType === 3){
+		if ($this->colorType === 3) {
 			$this->isPalette = true;
 		}
 
-		if($this->colorType === 4 or $this->colorType === 6){
+		if ($this->colorType === 4 or $this->colorType === 6) {
 			$this->isAlpha = true;
-		}else{
+		} else {
 			$this->isAlpha = false;
 		}
 	}
 
-	private function readPLTE(int $length){
+	private function readPLTE(int $length) {
 		$this->isPalette = true;//unused?
 
 		$paletteCount = $length / 3;
-		for($i = 0; $i < $paletteCount; $i++){
+		for ($i = 0; $i < $paletteCount; $i++) {
 			$r = $this->stream->getByte();
 			$g = $this->stream->getByte();
 			$b = $this->stream->getByte();
@@ -141,71 +141,71 @@ class PNGParser{
 		}
 	}
 
-	private function readtRNS(int $length){
-		switch($this->colorType){
+	private function readtRNS(int $length) {
+		switch ($this->colorType) {
 			/*case 0:
 
-			break;
+				break;
 			case 2:
 
-			break;*/
+				break;*/
 			case 3:
-				for($i = 0; $i < $length; $i++){
+				for ($i = 0; $i < $length; $i++) {
 					$this->palette[$i][3] = $this->stream->getByte();
 				}
-			break;
+				break;
 			default:
 				echo "Sorry, i can't parse png file. readtRNS: ".$this->colorType."\n";
 				echo "Report to BigBrotherTeam!\n";
-			break;
+				break;
 		}
 	}
 
-	private function readIDAT(int $length){
+	private function readIDAT(int $length) {
 		$chunkData = zlib_decode($this->stream->get($length));
 
 		$this->rawImageData .= $chunkData;
 	}
 
-	private function readAllIDAT(){
+	private function readAllIDAT() {
 		$stream = new BinaryStream($this->rawImageData);
 
-		for($height = 0; $height < $this->height; $height++){
+		for ($height = 0; $height < $this->height; $height++) {
 			$filterMethod = $stream->getByte();
 
-			for($width = 0; $width < $this->width; $width++){
-				if($this->isPalette){
+			for ($width = 0; $width < $this->width; $width++) {
+				if ($this->isPalette) {
 					$paletteIndex = $this->getData($stream);
 					$rgb = $this->palette[$paletteIndex];
 
 					$this->setRGBA($height, $width, [$rgb[0], $rgb[1], $rgb[2], $rgb[3]]);
-				}else{
+				} else {
 					$r = $this->getData($stream);
 					$g = $this->getData($stream);
 					$b = $this->getData($stream);
-					if($this->isAlpha){
+					if ($this->isAlpha) {
 						$a = $this->getData($stream);
-					}else{
+					} else {
 						$a = 255;
 					}
 
-					switch($filterMethod){
+					switch ($filterMethod) {
 						case 0://None
-						break;
+							break;
 						case 1://Sub
 							$left = $this->getRGBA($height, $width - 1);
 							$r = $this->calculateColor($r, $left[0]);
 							$g = $this->calculateColor($g, $left[1]);
 							$b = $this->calculateColor($b, $left[2]);
 							$a = $this->calculateColor($a, $left[3]);
-						break;
+							break;
 						case 2://Up
 							$above = $this->getRGBA($height - 1, $width);
 							$r = $this->calculateColor($r, $above[0]);
 							$g = $this->calculateColor($g, $above[1]);
 							$b = $this->calculateColor($b, $above[2]);
 							$a = $this->calculateColor($a, $above[3]);
-						break;
+							break;
 						case 3://Average
 							$left = $this->getRGBA($height, $width - 1);
 							$above = $this->getRGBA($height - 1, $width);
@@ -218,7 +218,7 @@ class PNGParser{
 							$g = $this->calculateColor($g, $avrgG);
 							$b = $this->calculateColor($b, $avrgB);
 							$a = $this->calculateColor($a, $avrgA);
-						break;
+							break;
 						case 4://Paeth
 							$left = $this->getRGBA($height, $width - 1);
 							$above = $this->getRGBA($height - 1, $width);
@@ -233,7 +233,7 @@ class PNGParser{
 							$g = $this->calculateColor($g, $paethG);
 							$b = $this->calculateColor($b, $paethB);
 							$a = $this->calculateColor($a, $paethA);
-						break;
+							break;
 					}
 
 					$this->setRGBA($height, $width, [$r, $g, $b, $a]);
@@ -242,21 +242,21 @@ class PNGParser{
 		}
 	}
 
-	private function getData(BinaryStream $stream): int{
-		switch($this->bitDepth){
+	private function getData(BinaryStream $stream): int {
+		switch ($this->bitDepth) {
 			/*case 1:
 
-			break;
+				break;
 			case 2:
 
-			break;*/
+				break;*/
 			case 4:
-				if($this->usedBitNum === 0){
+				if ($this->usedBitNum === 0) {
 					$this->usedBit = $stream->getByte();
 					$this->usedBitNum = 4;
 
 					return $this->usedBit >> 4;
-				}else{
+				} else {
 					$this->usedBitNum = 0;
 
 					return $this->usedBit & 0x0f;
@@ -268,50 +268,50 @@ class PNGParser{
 			default:
 				echo "Sorry, i can't parse png file. getData: ".$this->bitDepth."\n";
 				echo "Report to BigBrotherTeam!\n";
-			break;
+				break;
 		}
 
 		return 0;
 	}
 
-	private function calculateColor($color1, $color2): int{
+	private function calculateColor($color1, $color2): int {
 		return ($color1 + $color2) % 256;
 	}
 
-	private function average($color1, $color2){
+	private function average($color1, $color2) {
 		return floor(($color1[0] + $color2[0]) / 2);
 	}
 
-	private function paethPredictor($a, $b, $c){
+	private function paethPredictor($a, $b, $c) {
 		$p = $a + $b - $c;
 		$pa = abs($p - $a);
 		$pb = abs($p - $b);
 		$pc = abs($p - $c);
-		if($pa <= $pb && $pa <= $pc){
+		if ($pa <= $pb && $pa <= $pc) {
 			return $a;
-		}elseif($pb <= $pc){
+		} elseif ($pb <= $pc) {
 			return $b;
- 		}else{
+ 		} else {
 			return $c;
 		}
 	}
 
-	private function readIEND($length){
+	private function readIEND($length) {
 		//No chunk data
 	}
 
-	public function setWidth(int $width){
+	public function setWidth(int $width) {
 		$this->width = $width;
 		$this->generatePixelData();
 	}
 
-	public function setHeight(int $height){
+	public function setHeight(int $height) {
 		$this->height = $height;
 		$this->generatePixelData();
 	}
 
 	public function setRGBA(int $x, int $z, array $pixelData) : bool{
-		if(isset($this->pixelData[$x][$z])){
+		if (isset($this->pixelData[$x][$z])) {
 			$this->pixelData[$x][$z] = $pixelData;
 			return true;
 		}
@@ -319,16 +319,16 @@ class PNGParser{
 		return false;
 	}
 
-	private function generatePixelData(){
+	private function generatePixelData() {
 		$old_pixelData = $this->pixelData;
 		$this->pixelData = [];
 
-		for($height = 0; $height < $this->height; $height++){
+		for ($height = 0; $height < $this->height; $height++) {
 			$this->pixelData[$height] = [];
 
-			for($width = 0; $width < $this->width; $width++){
+			for ($width = 0; $width < $this->width; $width++) {
 				$pixel = [0,0,0,255];
-				if(isset($old_pixelData[$height][$width])){
+				if (isset($old_pixelData[$height][$width])) {
 					$pixel = $old_pixelData[$height][$width];
 				}
 

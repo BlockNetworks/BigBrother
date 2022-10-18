@@ -31,16 +31,16 @@ namespace shoghicp\BigBrother\network\protocol\Play\Client;
 
 use shoghicp\BigBrother\network\InboundPacket;
 
-class PlayerPacket extends InboundPacket{
+class PlayerPacket extends InboundPacket {
 
 	/** @var bool */
 	public $onGround;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::PLAYER_PACKET;
 	}
 
-	protected function decode() : void{
+	protected function decode() : void {
 		$this->onGround = $this->getBool();
 	}
 }

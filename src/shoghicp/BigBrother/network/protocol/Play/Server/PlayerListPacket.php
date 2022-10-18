@@ -31,7 +31,7 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class PlayerListPacket extends OutboundPacket{
+class PlayerListPacket extends OutboundPacket {
 
 	const TYPE_ADD = 0;
 	const TYPE_UPDATE_NAME = 3;
@@ -42,27 +42,27 @@ class PlayerListPacket extends OutboundPacket{
 	/** @var array */
 	public $players = [];
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::PLAYER_LIST_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putVarInt($this->actionID);
 		$this->putVarInt(count($this->players));
-		foreach($this->players as $player){
-			switch($this->actionID){
+		foreach ($this->players as $player) {
+			switch ($this->actionID) {
 				case self::TYPE_ADD:
 					$this->put($player[0]);//UUID
 					$this->putString($player[1]); //PlayerName
 					$this->putVarInt(count($player[2])); //Count Property
 
-					foreach($player[2] as $propertyData){
+					foreach ($player[2] as $propertyData) {
 						$this->putString($propertyData["name"]); //Name
 						$this->putString($propertyData["value"]); //Value
-						if(isset($propertyData["signature"])){
+						if (isset($propertyData["signature"])) {
 							$this->putBool(true); //Is Signed
 							$this->putString($propertyData["signature"]); //Property
-						}else{
+						} else {
 							$this->putBool(false); //Is Signed
 						}
 					}
@@ -70,7 +70,7 @@ class PlayerListPacket extends OutboundPacket{
 					$this->putVarInt($player[3]); //Gamemode
 					$this->putVarInt($player[4]); //Ping
 					$this->putBool($player[5]); //has Display name
-					if($player[5] === true){
+					if ($player[5] === true) {
 						$this->putString($player[6]); //Display name
 					}
 					break;

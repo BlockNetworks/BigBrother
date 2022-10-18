@@ -52,7 +52,7 @@ use shoghicp\BigBrother\network\protocol\Play\Server\OpenSignEditorPacket;
 use shoghicp\BigBrother\utils\ConvertUtils;
 use shoghicp\BigBrother\utils\ColorUtils;
 
-class BigBrother extends PluginBase implements Listener{
+class BigBrother extends PluginBase implements Listener {
 
 	/** @var ProtocolInterface */
 	private $interface;
@@ -78,16 +78,16 @@ class BigBrother extends PluginBase implements Listener{
 	/**
 	 * @override
 	 */
-	public function onEnable(){
+	public function onEnable() {
 		$enable = true;
-		foreach($this->getServer()->getNetwork()->getInterfaces() as $interface){
-			if($interface instanceof ProtocolInterface){
+		foreach ($this->getServer()->getNetwork()->getInterfaces() as $interface) {
+			if ($interface instanceof ProtocolInterface) {
 				$enable = false;
 			}
 		}
 
-		if($enable){
-			if(Info::CURRENT_PROTOCOL === 422){
+		if ($enable) {
+			if (Info::CURRENT_PROTOCOL === 422) {
 				ConvertUtils::init();
 
 				$this->saveDefaultConfig();
@@ -104,67 +104,67 @@ class BigBrother extends PluginBase implements Listener{
 				$this->getLogger()->info("PMMP Server version: ".$this->getServer()->getVersion());
 				$this->getLogger()->info("PMMP API version: ".$this->getServer()->getApiVersion());
 
-				if(!$this->isPhar() and is_dir($this->getFile().".git")){
+				if (!$this->isPhar() && is_dir($this->getFile().".git")) {
 					$cwd = getcwd();
 					chdir($this->getFile());
 					@exec("git describe --tags --always --dirty", $revision, $value);
-					if($value == 0){
+					if ($value == 0) {
 						$this->getLogger()->info("BigBrother revision: ".$revision[0]);
 					}
 					chdir($cwd);
-				}elseif(($resource = $this->getResource("revision")) and ($revision = stream_get_contents($resource))){
+				} elseif (($resource = $this->getResource("revision")) && ($revision = stream_get_contents($resource))) {
 					$this->getLogger()->info("BigBrother.phar; revision: ".$revision);
 				}
 
-				if(!$this->setupComposer()){
+				if (!$this->setupComposer()) {
 					$this->getLogger()->critical("Composer autoloader not found");
 					$this->getServer()->getPluginManager()->disablePlugin($this);
 					return;
 				}
 
 				$aes = new AES(AES::MODE_CFB8);
-				switch($aes->getEngine()){
+				switch ($aes->getEngine()) {
 					case AES::ENGINE_OPENSSL:
 						$this->getLogger()->info("Use openssl as AES encryption engine.");
-					break;
+						break;
 					case AES::ENGINE_MCRYPT:
 						$this->getLogger()->warning("Use obsolete mcrypt for AES encryption. Try to install openssl extension instead!!");
-					break;
+						break;
 					case AES::ENGINE_INTERNAL:
 						$this->getLogger()->warning("Use phpseclib internal engine for AES encryption, this may impact on performance. To improve them, try to install openssl extension.");
-					break;
+						break;
 				}
 
 				$this->rsa = new RSA();
-				switch(constant("CRYPT_RSA_MODE")){
+				switch (constant("CRYPT_RSA_MODE")) {
 					case RSA::MODE_OPENSSL:
 						$this->rsa->configFile = $this->getDataFolder() . "openssl.cnf";
 						$this->getLogger()->info("Use openssl as RSA encryption engine.");
-					break;
+						break;
 					case RSA::MODE_INTERNAL:
 						$this->getLogger()->info("Use phpseclib internal engine for RSA encryption.");
-					break;
+						break;
 				}
 
-				if($aes->getEngine() === AES::ENGINE_OPENSSL or constant("CRYPT_RSA_MODE") === RSA::MODE_OPENSSL){
+				if ($aes->getEngine() === AES::ENGINE_OPENSSL || constant("CRYPT_RSA_MODE") === RSA::MODE_OPENSSL) {
 					ob_start();
 					@phpinfo();
 					preg_match_all('#OpenSSL (Header|Library) Version => (.*)#im', ob_get_contents() ?? "", $matches);
 					ob_end_clean();
 
-					foreach(array_map(null, $matches[1], $matches[2]) as $version){
+					foreach (array_map(null, $matches[1], $matches[2]) as $version) {
 						$this->getLogger()->info("OpenSSL ".$version[0]." version: ".$version[1]);
 					}
 				}
 
-				if(!$this->getConfig()->exists("motd")){
+				if (!$this->getConfig()->exists("motd")) {
 					$this->getLogger()->warning("No motd has been set. The server description will be empty.");
 					$this->getServer()->getPluginManager()->disablePlugin($this);
 					return;
 				}
 
 				$this->onlineMode = (bool) $this->getConfig()->get("online-mode");
-				if($this->onlineMode){
+				if ($this->onlineMode) {
 					$this->getLogger()->info("Server is being started in the background");
 					$this->getLogger()->info("Generating keypair");
 					$this->rsa->setPrivateKeyFormat(RSA::PRIVATE_FORMAT_PKCS1);
@@ -183,7 +183,7 @@ class BigBrother extends PluginBase implements Listener{
 				$this->translator = new Translator();
 				$this->interface = new ProtocolInterface($this, $this->getServer(), $this->translator, (int) $this->getConfig()->get("network-compression-threshold"));
 				$this->getServer()->getNetwork()->registerInterface($this->interface);
-			}else{
+			} else {
 				$this->getLogger()->critical("Couldn't find a protocol translator for #".Info::CURRENT_PROTOCOL .", disabling plugin");
 				$this->getServer()->getPluginManager()->disablePlugin($this);
 			}
@@ -193,7 +193,7 @@ class BigBrother extends PluginBase implements Listener{
 	/**
 	 * @return string ip address
 	 */
-	public function getIp() : string{
+	public function getIp() : string {
 		return (string) $this->getConfig()->get("interface");
 	}
 
@@ -207,21 +207,21 @@ class BigBrother extends PluginBase implements Listener{
 	/**
 	 * @return string motd
 	 */
-	public function getMotd() : string{
+	public function getMotd() : string {
 		return (string) $this->getConfig()->get("motd");
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function isOnlineMode(): bool{
+	public function isOnlineMode(): bool {
 		return $this->onlineMode;
 	}
 
 	/**
 	 * @return string ASN1 Public Key
 	 */
-	public function getASN1PublicKey() : string{
+	public function getASN1PublicKey() : string {
 		$key = explode("\n", $this->publicKey);
 		array_pop($key);
 		array_shift($key);
@@ -232,7 +232,7 @@ class BigBrother extends PluginBase implements Listener{
 	 * @param string $cipher cipher text
 	 * @return string plain text
 	 */
-	public function decryptBinary(string $cipher) : string{
+	public function decryptBinary(string $cipher) : string {
 		return $this->rsa->decrypt($cipher);
 	}
 
@@ -241,10 +241,10 @@ class BigBrother extends PluginBase implements Listener{
 	 * @param int $timeout
 	 * @return array|null
 	 */
-	public function getProfileCache(string $username, int $timeout = 60): ?array{
-		if(isset($this->profileCache[$username]) && (microtime(true) - $this->profileCache[$username]["timestamp"] < $timeout)){
+	public function getProfileCache(string $username, int $timeout = 60): ?array {
+		if (isset($this->profileCache[$username]) && (microtime(true) - $this->profileCache[$username]["timestamp"] < $timeout)) {
 			return $this->profileCache[$username]["profile"];
-		}else{
+		} else {
 			unset($this->profileCache[$username]);
 			return null;
 		}
@@ -254,7 +254,7 @@ class BigBrother extends PluginBase implements Listener{
 	 * @param string $username
 	 * @param array profile
 	 */
-	public function setProfileCache(string $username, array $profile) : void{
+	public function setProfileCache(string $username, array $profile) : void {
 		$this->profileCache[$username] = [
 			"timestamp" => microtime(true),
 			"profile" => $profile
@@ -266,9 +266,9 @@ class BigBrother extends PluginBase implements Listener{
 	 *
 	 * @priority NORMAL
 	 */
-	public function onRespawn(PlayerRespawnEvent $event) : void{
+	public function onRespawn(PlayerRespawnEvent $event) : void {
 		$player = $event->getPlayer();
-		if($player instanceof DesktopPlayer){
+		if ($player instanceof DesktopPlayer) {
 			$pk = new RespawnPacket();
 			$pk->dimension = $player->bigBrother_getDimension();
 			$pk->difficulty = $player->getServer()->getDifficulty();
@@ -285,11 +285,11 @@ class BigBrother extends PluginBase implements Listener{
 	 *
 	 * @priority NORMAL
 	 */
-	public function onPlace(BlockPlaceEvent $event) : void{
+	public function onPlace(BlockPlaceEvent $event) : void {
 		$player = $event->getPlayer();
 		$block = $event->getBlock();
-		if($player instanceof DesktopPlayer){
-			if($block->getId() === Block::SIGN_POST or $block->getId() === Block::WALL_SIGN){
+		if ($player instanceof DesktopPlayer) {
+			if ($block->getId() === Block::SIGN_POST || $block->getId() === Block::WALL_SIGN) {
 				$pk = new OpenSignEditorPacket();
 				$pk->x = $block->x;
 				$pk->y = $block->y;
@@ -298,19 +298,19 @@ class BigBrother extends PluginBase implements Listener{
 			}
 		}
 
-		if($block instanceof Chest){
+		if ($block instanceof Chest) {
 			$num_side_chest = 0;
-			for($i = 2; $i <= 5; ++$i){
-				if(($side_chest = $block->getSide($i))->getId() === $block->getId()){
+			for($i = 2; $i <= 5; ++$i) {
+				if (($side_chest = $block->getSide($i))->getId() === $block->getId()) {
 					++$num_side_chest;
-					for($j = 2; $j <= 5; ++$j){
-						if($side_chest->getSide($j)->getId() === $side_chest->getId()){//Cancel block placement event if side chest is already large-chest
+					for($j = 2; $j <= 5; ++$j) {
+						if ($side_chest->getSide($j)->getId() === $side_chest->getId()) {//Cancel block placement event if side chest is already large-chest
 							$event->setCancelled();
 						}
 					}
 				}
 			}
-			if($num_side_chest > 1){//Cancel if there are more than one chest that can be large-chest
+			if ($num_side_chest > 1) {//Cancel if there are more than one chest that can be large-chest
 				$event->setCancelled();
 			}
 		}
@@ -321,21 +321,21 @@ class BigBrother extends PluginBase implements Listener{
 	 *
 	 * @priority NORMAL
 	 */
-	public function onBreak(BlockBreakEvent $event) : void{
+	public function onBreak(BlockBreakEvent $event) : void {
 		$player = $event->getPlayer();
-		if($player instanceof DesktopPlayer){
-			$event->setInstaBreak(true);//ItemFrame and other blocks
+		if ($player instanceof DesktopPlayer) {
+			$event->setInstaBreak(true);//ItemFrame && other blocks
 		}
 	}
 
-	private function setupComposer() : bool{
+	private function setupComposer() : bool {
 		$base = $this->getFile();
 		$data = $this->getDataFolder();
 		$setup = $data . 'composer-setup.php';
 		$composer = $data . 'composer.phar';
 		$autoload = $base . 'vendor/autoload.php';
 
-		if(!$this->isPhar() and !is_file($autoload)){
+		if (!$this->isPhar() && !is_file($autoload)) {
 			$this->getLogger()->info("Trying to setup composer...");
 			copy('https://getcomposer.org/installer', $setup);
 			exec(join(' ', [PHP_BINARY, $setup, '--install-dir', $data]));
@@ -344,11 +344,11 @@ class BigBrother extends PluginBase implements Listener{
 			exec(join(' ', [PHP_BINARY, $composer, 'install', '-d', $base, '--no-dev', '-o']));
 		}
 
-		if(is_file($autoload)){
+		if (is_file($autoload)) {
 			$this->getLogger()->info("Registering Composer autoloader...");
 			__require($autoload);
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
@@ -359,15 +359,15 @@ class BigBrother extends PluginBase implements Listener{
 	 * @param array|null  $parameters
 	 * @return string
 	 */
-	public static function toJSON(?string $message, int $type = 1, ?array $parameters = []) : string{
+	public static function toJSON(?string $message, int $type = 1, ?array $parameters = []) : string {
 		$result = json_decode(BigBrother::toJSONInternal($message), true);
 
-		switch($type){
+		switch ($type) {
 			case TextPacket::TYPE_TRANSLATION:
 				unset($result["text"]);
 				$message = TextFormat::clean($message);
 
-				if(substr($message, 0, 1) === "["){//chat.type.admin
+				if (substr($message, 0, 1) === "[") {//chat.type.admin
 					$result["translate"] = "chat.type.admin";
 					$result["color"] = "gray";
 					$result["italic"] = true;
@@ -375,41 +375,41 @@ class BigBrother extends PluginBase implements Listener{
 
 					$result["with"][] = ["text" => substr($message, 1, strpos($message, ":") - 1)];
 
-					if($message === "[CONSOLE: Reload complete.]" or $message === "[CONSOLE: Reloading server...]"){//blame pmmp
+					if ($message === "[CONSOLE: Reload complete.]" || $message === "[CONSOLE: Reloading server...]") {//blame pmmp
 						$result["with"][] = ["translate" => substr(substr($message, strpos($message, ":") + 2), 0, - 1), "color" => "yellow"];
-					}else{
+					} else {
 						$result["with"][] = ["translate" => substr(substr($message, strpos($message, ":") + 2), 0, - 1)];
 					}
 
 					$with = &$result["with"][1];
-				}else{
+				} else {
 					$result["translate"] = str_replace("%", "", $message);
 
 					$with = &$result;
 				}
 
-				foreach($parameters as $parameter){
-					if(strpos($parameter, "%") !== false){
+				foreach ($parameters as $parameter) {
+					if (strpos($parameter, "%") !== false) {
 						$with["with"][] = ["translate" => str_replace("%", "", $parameter)];
-					}else{
+					} else {
 						$with["with"][] = ["text" => $parameter];
 					}
 				}
-			break;
+				break;
 			case TextPacket::TYPE_POPUP:
 			case TextPacket::TYPE_TIP://Just to be sure
-				if(isset($result["text"])){
+				if (isset($result["text"])) {
 					$result["text"] = str_replace("\n", "", $message);
 				}
 
-				if(isset($result["extra"])){
+				if (isset($result["extra"])) {
 					unset($result["extra"]);
 				}
-			break;
+				break;
 		}
 
-		if(isset($result["extra"])){
-			if(count($result["extra"]) === 0){
+		if (isset($result["extra"])) {
+			if (count($result["extra"]) === 0) {
 				unset($result["extra"]);
 			}
 		}
@@ -425,8 +425,8 @@ class BigBrother extends PluginBase implements Listener{
 	 * @param string|string[] $string
 	 * @return string
 	 */
-	public static function toJSONInternal($string) : string{
-		if(!is_array($string)){
+	public static function toJSONInternal($string) : string {
+		if (!is_array($string)) {
 			$string = TextFormat::tokenize($string);
 		}
 		$newString = [];
@@ -439,172 +439,172 @@ class BigBrother extends PluginBase implements Listener{
 		$obfuscated = false;
 		$index = 0;
 
-		foreach($string as $token){
-			if(isset($pointer["text"])){
-				if(!isset($newString["extra"])){
+		foreach ($string as $token) {
+			if (isset($pointer["text"])) {
+				if (!isset($newString["extra"])) {
 					$newString["extra"] = [];
 				}
 				$newString["extra"][$index] = [];
 				$pointer =& $newString["extra"][$index];
-				if($color !== "white"){
+				if ($color !== "white") {
 					$pointer["color"] = $color;
 				}
-				if($bold){
+				if ($bold) {
 					$pointer["bold"] = true;
 				}
-				if($italic){
+				if ($italic) {
 					$pointer["italic"] = true;
 				}
-				if($underlined){
+				if ($underlined) {
 					$pointer["underlined"] = true;
 				}
-				if($strikethrough){
+				if ($strikethrough) {
 					$pointer["strikethrough"] = true;
 				}
-				if($obfuscated){
+				if ($obfuscated) {
 					$pointer["obfuscated"] = true;
 				}
 				++$index;
 			}
-			switch($token){
+			switch ($token) {
 				case TextFormat::BOLD:
-					if(!$bold){
+					if (!$bold) {
 						$pointer["bold"] = true;
 						$bold = true;
 					}
-				break;
+					break;
 				case TextFormat::OBFUSCATED:
-					if(!$obfuscated){
+					if (!$obfuscated) {
 						$pointer["obfuscated"] = true;
 						$obfuscated = true;
 					}
-				break;
+					break;
 				case TextFormat::ITALIC:
-					if(!$italic){
+					if (!$italic) {
 						$pointer["italic"] = true;
 						$italic = true;
 					}
-				break;
+					break;
 				case TextFormat::UNDERLINE:
-					if(!$underlined){
+					if (!$underlined) {
 						$pointer["underlined"] = true;
 						$underlined = true;
 					}
-				break;
+					break;
 				case TextFormat::STRIKETHROUGH:
-					if(!$strikethrough){
+					if (!$strikethrough) {
 						$pointer["strikethrough"] = true;
 						$strikethrough = true;
 					}
-				break;
+					break;
 				case TextFormat::RESET:
-					if($color !== "white"){
+					if ($color !== "white") {
 						$pointer["color"] = "white";
 						$color = "white";
 					}
-					if($bold){
+					if ($bold) {
 						$pointer["bold"] = false;
 						$bold = false;
 					}
-					if($italic){
+					if ($italic) {
 						$pointer["italic"] = false;
 						$italic = false;
 					}
-					if($underlined){
+					if ($underlined) {
 						$pointer["underlined"] = false;
 						$underlined = false;
 					}
-					if($strikethrough){
+					if ($strikethrough) {
 						$pointer["strikethrough"] = false;
 						$strikethrough = false;
 					}
-					if($obfuscated){
+					if ($obfuscated) {
 						$pointer["obfuscated"] = false;
 						$obfuscated = false;
 					}
-				break;
+					break;
 
 				//Colors
 				case TextFormat::BLACK:
 					$pointer["color"] = "black";
 					$color = "black";
-				break;
+					break;
 				case TextFormat::DARK_BLUE:
 					$pointer["color"] = "dark_blue";
 					$color = "dark_blue";
-				break;
+					break;
 				case TextFormat::DARK_GREEN:
 					$pointer["color"] = "dark_green";
 					$color = "dark_green";
-				break;
+					break;
 				case TextFormat::DARK_AQUA:
 					$pointer["color"] = "dark_aqua";
 					$color = "dark_aqua";
-				break;
+					break;
 				case TextFormat::DARK_RED:
 					$pointer["color"] = "dark_red";
 					$color = "dark_red";
-				break;
+					break;
 				case TextFormat::DARK_PURPLE:
 					$pointer["color"] = "dark_purple";
 					$color = "dark_purple";
-				break;
+					break;
 				case TextFormat::GOLD:
 					$pointer["color"] = "gold";
 					$color = "gold";
-				break;
+					break;
 				case TextFormat::GRAY:
 					$pointer["color"] = "gray";
 					$color = "gray";
-				break;
+					break;
 				case TextFormat::DARK_GRAY:
 					$pointer["color"] = "dark_gray";
 					$color = "dark_gray";
-				break;
+					break;
 				case TextFormat::BLUE:
 					$pointer["color"] = "blue";
 					$color = "blue";
-				break;
+					break;
 				case TextFormat::GREEN:
 					$pointer["color"] = "green";
 					$color = "green";
-				break;
+					break;
 				case TextFormat::AQUA:
 					$pointer["color"] = "aqua";
 					$color = "aqua";
-				break;
+					break;
 				case TextFormat::RED:
 					$pointer["color"] = "red";
 					$color = "red";
-				break;
+					break;
 				case TextFormat::LIGHT_PURPLE:
 					$pointer["color"] = "light_purple";
 					$color = "light_purple";
-				break;
+					break;
 				case TextFormat::YELLOW:
 					$pointer["color"] = "yellow";
 					$color = "yellow";
-				break;
+					break;
 				case TextFormat::WHITE:
 					$pointer["color"] = "white";
 					$color = "white";
-				break;
+					break;
 				default:
 					$pointer["text"] = $token;
-				break;
+					break;
 			}
 		}
 
-		if(isset($newString["extra"])){
-			foreach($newString["extra"] as $k => $d){
-				if(!isset($d["text"])){
+		if (isset($newString["extra"])) {
+			foreach ($newString["extra"] as $k => $d) {
+				if (!isset($d["text"])) {
 					unset($newString["extra"][$k]);
 				}
 			}
 		}
 
 		$result = json_encode($newString, JSON_UNESCAPED_SLASHES);
-		if($result === false){
+		if ($result === false) {
 			throw new InvalidArgumentException("Failed to encode result JSON: " . json_last_error_msg());
 		}
 		return $result;
@@ -619,7 +619,7 @@ class BigBrother extends PluginBase implements Listener{
  * @param string $file
  * @return void
  */
-function __require(string $file){
+function __require(string $file) {
 	/** @noinspection PhpIncludeInspection */
 	return require $file;
 }

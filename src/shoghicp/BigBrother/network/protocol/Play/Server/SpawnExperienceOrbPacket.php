@@ -31,7 +31,7 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class SpawnExperienceOrbPacket extends OutboundPacket{
+class SpawnExperienceOrbPacket extends OutboundPacket {
 
 	/** @var int */
 	public $eid;
@@ -44,11 +44,11 @@ class SpawnExperienceOrbPacket extends OutboundPacket{
 	/** @var int */
 	public $count;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::SPAWN_EXPERIENCE_ORB_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putVarInt($this->eid);
 		$this->putDouble($this->x);
 		$this->putDouble($this->y);

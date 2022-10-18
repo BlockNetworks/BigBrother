@@ -31,18 +31,18 @@ namespace shoghicp\BigBrother\network\protocol\Login;
 
 use shoghicp\BigBrother\network\InboundPacket;
 
-class EncryptionResponsePacket extends InboundPacket{
+class EncryptionResponsePacket extends InboundPacket {
 
 	/** @var string */
 	public $sharedSecret;
 	/** @var string */
 	public $verifyToken;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::ENCRYPTION_RESPONSE_PACKET;
 	}
 
-	protected function decode() : void{
+	protected function decode() : void {
 		$this->sharedSecret = $this->get($this->getVarInt());
 		$this->verifyToken = $this->get($this->getVarInt());
 	}

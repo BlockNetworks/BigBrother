@@ -53,7 +53,7 @@ use pocketmine\utils\Binary;
 use shoghicp\BigBrother\BigBrother;
 use UnexpectedValueException;
 
-class ConvertUtils{
+class ConvertUtils {
 	/** @var TimingsHandler */
 	private static $timingConvertItem;
 	/** @var TimingsHandler */
@@ -248,7 +248,7 @@ class ConvertUtils{
 	/** @var array */
 	private static $reverseSpawnEggList;
 
-	public static function init() : void{
+	public static function init() : void {
 		self::$timingConvertItem = new TimingsHandler("BigBrother - Convert Item Data");
 		self::$timingConvertBlock = new TimingsHandler("BigBrother - Convert Block Data");
 
@@ -258,18 +258,18 @@ class ConvertUtils{
 			[/* PC => PE */]
 		];
 
-		foreach(self::$idList as $entry){
+		foreach (self::$idList as $entry) {
 			//append index (PE => PC)
-			if(isset(self::$idListIndex[0][$entry[0][0]])){
+			if (isset(self::$idListIndex[0][$entry[0][0]])) {
 				self::$idListIndex[0][$entry[0][0]][] = $entry;
-			}else{
+			} else {
 				self::$idListIndex[0][$entry[0][0]] = [$entry];
 			}
 
 			//append index (PC => PE)
-			if(isset(self::$idListIndex[1][$entry[1][0]])){
+			if (isset(self::$idListIndex[1][$entry[1][0]])) {
 				self::$idListIndex[1][$entry[1][0]][] = $entry;
-			}else{
+			} else {
 				self::$idListIndex[1][$entry[1][0]] = [$entry];
 			}
 		}
@@ -285,61 +285,61 @@ class ConvertUtils{
 	public static function convertNBTDataFromPEtoPC(NamedTag $nbt, $isListTag = false) : string{
 		$stream = new BinaryStream();
 
-		if(!$isListTag){
+		if (!$isListTag) {
 			$stream->putByte($nbt->getType());
 
-			if($nbt instanceof NamedTag){
+			if ($nbt instanceof NamedTag) {
 				$stream->putShort(strlen($nbt->getName()));
 				$stream->put($nbt->getName());
 			}
 		}
 
-		switch($nbt->getType()){
+		switch ($nbt->getType()) {
 			case NBT::TAG_Compound:
 				assert($nbt instanceof CompoundTag);
-				foreach($nbt as $tag){
+				foreach ($nbt as $tag) {
 					$stream->put(self::convertNBTDataFromPEtoPC($tag));
 				}
 
 				$stream->putByte(0);
-			break;
+				break;
 			case NBT::TAG_End: //No named tag
-			break;
+				break;
 			case NBT::TAG_Byte:
 				$stream->putByte($nbt->getValue());
-			break;
+				break;
 			case NBT::TAG_Short:
 				$stream->putShort($nbt->getValue());
-			break;
+				break;
 			case NBT::TAG_Int:
 				$stream->putInt($nbt->getValue());
-			break;
+				break;
 			case NBT::TAG_Long:
 				$stream->putLong($nbt->getValue());
-			break;
+				break;
 			case NBT::TAG_Float:
 				$stream->putFloat($nbt->getValue());
-			break;
+				break;
 			case NBT::TAG_Double:
 				$stream->put(Binary::writeDouble($nbt->getValue()));
-			break;
+				break;
 			case NBT::TAG_ByteArray:
 				$stream->putInt(strlen($nbt->getValue()));
 				$stream->put($nbt->getValue());
-			break;
+				break;
 			case NBT::TAG_String:
 				$stream->putShort(strlen($nbt->getValue()));
 				$stream->put($nbt->getValue());
-			break;
+				break;
 			case NBT::TAG_List:
 				assert($nbt instanceof ListTag);
 
 				$count = count($nbt);
 				$type = $nbt->getTagType();
 
-				foreach($nbt as $tag){
-					if($tag instanceof NamedTag){
-						if($type !== $tag->getType()){
+				foreach ($nbt as $tag) {
+					if ($tag instanceof NamedTag) {
+						if ($type !== $tag->getType()) {
 							throw new UnexpectedValueException("ListTag must consists of tags which types are the same");
 						}
 					}
@@ -348,14 +348,14 @@ class ConvertUtils{
 				$stream->putByte($type);
 				$stream->putInt($count);
 
-				foreach($nbt as $tag){
+				foreach ($nbt as $tag) {
 					$stream->put(self::convertNBTDataFromPEtoPC($tag, true));
 				}
-			break;
+				break;
 			case NBT::TAG_IntArray:
 				$stream->putInt(count($nbt->getValue()));
 				$stream->put(pack("N*", ...$nbt->getValue()));
-			break;
+				break;
 		}
 
 		return $stream->getBuffer();
@@ -367,88 +367,88 @@ class ConvertUtils{
 	 * @param int 	 $listTagId
 	 * @return CompoundTag|NamedTag|null
 	 */
-	public static function convertNBTDataFromPCtoPE(string $buffer, $isListTag = false, $listTagId = NBT::TAG_End) : ?NamedTag{
+	public static function convertNBTDataFromPCtoPE(string $buffer, $isListTag = false, $listTagId = NBT::TAG_End) : ?NamedTag {
 		$stream = new BinaryStream($buffer);
 		$nbt = null;
 
 		$name = "";
-		if($isListTag){
+		if ($isListTag) {
 			$type = $listTagId;
-		}else{
+		} else {
 			$type = $stream->getByte();
-			if($type !== NBT::TAG_End){
+			if ($type !== NBT::TAG_End) {
 				$name = $stream->get($stream->getShort());
 			}
 		}
 
-		switch($type){
+		switch ($type) {
 			case NBT::TAG_End://unused
 				$nbt = null;
-			break;
+				break;
 			case NBT::TAG_Byte:
 				$nbt = new ByteTag($name, $stream->getByte());
-			break;
+				break;
 			case NBT::TAG_Short:
 				$nbt = new ShortTag($name, $stream->getShort());
-			break;
+				break;
 			case NBT::TAG_Int:
 				$nbt = new IntTag($name, $stream->getInt());
-			break;
+				break;
 			case NBT::TAG_Long:
 				$nbt = new LongTag($name, $stream->getLong());
-			break;
+				break;
 			case NBT::TAG_Float:
 				$nbt = new FloatTag($name, $stream->getFloat());
-			break;
+				break;
 			case NBT::TAG_Double:
 				$nbt = new DoubleTag($name, Binary::readDouble($stream->get(8)));
-			break;
+				break;
 			case NBT::TAG_ByteArray:
 				$nbt = new ByteArrayTag($name, $stream->get($stream->getInt()));
-			break;
+				break;
 			case NBT::TAG_String:
 				$nbt = new StringTag($name, $stream->get($stream->getShort()));
-			break;
+				break;
 			case NBT::TAG_List:
 				$id = $stream->getByte();
 				$count = $stream->getInt();
 
 				$tags = [];
-				for($i = 0; $i < $count and !$stream->feof(); $i++){
+				for ($i = 0; $i < $count and !$stream->feof(); $i++) {
 					$tag = self::convertNBTDataFromPCtoPE(substr($buffer, $stream->getOffset()), true, $id);
-					if($tag instanceof NamedTag){
+					if ($tag instanceof NamedTag) {
 						$stream->offset += strlen(self::convertNBTDataFromPEtoPC($tag, true));
-					}else{
+					} else {
 						$stream->offset += 1;
 					}
 
-					if($tag instanceof NamedTag){
+					if ($tag instanceof NamedTag) {
 						$tags[] = $tag;
 					}
 				}
 
 				$nbt = new ListTag($name, $tags, $id);
-			break;
+				break;
 			case NBT::TAG_Compound:
 				$tags = [];
-				do{
+				do {
 					$tag = self::convertNBTDataFromPCtoPE(substr($buffer, $stream->getOffset()));
-					if($tag instanceof NamedTag){
+					if ($tag instanceof NamedTag) {
 						$stream->offset += strlen(self::convertNBTDataFromPEtoPC($tag));
-					}else{
+					} else {
 						$stream->offset += 1;
 					}
 
-					if($tag instanceof NamedTag){
+					if ($tag instanceof NamedTag) {
 						$tags[] = $tag;
 					}
-				}while($tag !== null and !$stream->feof());
+				} while ($tag !== null and !$stream->feof());
 
 				$nbt = new CompoundTag($name, $tags);
-			break;
+				break;
 			case NBT::TAG_IntArray:
 				$nbt = new IntArrayTag($name, unpack("N*", $stream->get($stream->getInt()*4)));
-			break;
+				break;
 		}
 
 		return $nbt;
@@ -461,7 +461,7 @@ class ConvertUtils{
 	 * @param bool $isComputer
 	 * @param Item &$item
 	 */
-	public static function convertItemData(bool $isComputer, Item &$item) : void{
+	public static function convertItemData(bool $isComputer, Item &$item) : void {
 		self::$timingConvertItem->startTiming();
 
 		$itemId = $item->getId();
@@ -469,27 +469,27 @@ class ConvertUtils{
 		$itemCount = $item->getCount();
 		$itemNBT = clone $item->getNamedTag();
 
-		switch($itemId){
+		switch ($itemId) {
 			case Item::PUMPKIN:
 			case Item::JACK_O_LANTERN:
 				$itemDamage = 0;
-			break;
+				break;
 			case Item::WRITTEN_BOOK:
 			case Item::WRITABLE_BOOK:
-				if($isComputer){
+				if ($isComputer) {
 					$listTag = [];
 					$photoListTag = [];
-					foreach($itemNBT["pages"] as $pageNumber => $pageTags){
-						if($pageTags instanceof CompoundTag){
-							foreach($pageTags as $name => $tag){
-								if($tag instanceof StringTag){
-									switch($tag->getName()){
+					foreach ($itemNBT["pages"] as $pageNumber => $pageTags) {
+						if ($pageTags instanceof CompoundTag) {
+							foreach ($pageTags as $name => $tag) {
+								if ($tag instanceof StringTag) {
+									switch ($tag->getName()) {
 										case "text":
 											$listTag[] = new StringTag("", $tag->getValue());
-										break;
+											break;
 										case "photoname":
 											$photoListTag[] = new StringTag("", $tag->getValue());
-										break;
+											break;
 									}
 								}
 							}
@@ -499,14 +499,14 @@ class ConvertUtils{
 					$itemNBT->removeTag("pages");
 					$itemNBT->setTag(new ListTag("pages", $listTag));
 					$itemNBT->setTag(new ListTag("photoname", $photoListTag));
-				}else{
+				} else {
 					$listTag = [];
-					foreach($itemNBT["pages"] as $pageNumber => $tag){
-						if($tag instanceof StringTag){
+					foreach ($itemNBT["pages"] as $pageNumber => $tag) {
+						if ($tag instanceof StringTag) {
 							$tag->setName("text");
 
 							$value = "";
-							if(isset($itemNBT["photoname"][$pageNumber])){
+							if (isset($itemNBT["photoname"][$pageNumber])) {
 								$value = $itemNBT["photoname"][$pageNumber];
 							}
 							$photoNameTag = new StringTag("photoname", $value);
@@ -519,61 +519,61 @@ class ConvertUtils{
 					}
 
 					$itemNBT->removeTag("pages");
-					if($itemNBT->hasTag("photoname")){
+					if ($itemNBT->hasTag("photoname")) {
 						$itemNBT->removeTag("photoname");
 					}
 
 					$itemNBT->setTag(new ListTag("pages", $listTag));
 				}
-			break;
+				break;
 			case Item::SPAWN_EGG:
-				if($isComputer){
-					if($type = self::$spawnEggList[$itemDamage] ?? ""){
+				if ($isComputer) {
+					if ($type = self::$spawnEggList[$itemDamage] ?? "") {
 						$itemNBT = new CompoundTag("", [
 							new CompoundTag("EntityTag", [
 								new StringTag("id", $type),
 							])
 						]);
 					}
-				}else{
+				} else {
 					$entityTag = "";
-					if($itemNBT !== ""){
-						if($itemNBT->hasTag("EntityTag")){
+					if ($itemNBT !== "") {
+						if ($itemNBT->hasTag("EntityTag")) {
 							$entityTag = $itemNBT["EntityTag"]["id"];
 						}
 					}
 
 					$itemDamage = self::$reverseSpawnEggList[$entityTag] ?? 0;
 				}
-			break;
+				break;
 			default:
-				if($isComputer){
+				if ($isComputer) {
 					$src = 0; $dst = 1;
-				}else{
+				} else {
 					$src = 1; $dst = 0;
 				}
 
-				foreach(self::$idListIndex[$src][$itemId] ?? [] as $convertItemData){
-					if($convertItemData[$src][1] === -1){
+				foreach (self::$idListIndex[$src][$itemId] ?? [] as $convertItemData) {
+					if ($convertItemData[$src][1] === -1) {
 						$itemId = $convertItemData[$dst][0];
-						if($convertItemData[$dst][1] === -1){
+						if ($convertItemData[$dst][1] === -1) {
 							$itemDamage = $item->getDamage();
-						}else{
+						} else {
 							$itemDamage = $convertItemData[$dst][1];
 						}
-						break;
-					}elseif($convertItemData[$src][1] === $item->getDamage()){
+							break;
+					} elseif ($convertItemData[$src][1] === $item->getDamage()) {
 						$itemId = $convertItemData[$dst][0];
 						$itemDamage = $convertItemData[$dst][1];
-						break;
+							break;
 					}
 				}
-			break;
+				break;
 		}
 
-		if($isComputer){
+		if ($isComputer) {
 			$item = new ComputerItem($itemId, $itemDamage, $itemCount, $itemNBT);
-		}else{
+		} else {
 			$item = Item::get($itemId, $itemDamage, $itemCount, $itemNBT);
 		}
 
@@ -588,39 +588,39 @@ class ConvertUtils{
 	 * @param int  &$blockId to convert
 	 * @param int  &$blockData to convert
 	 */
-	public static function convertBlockData(bool $isComputer, int &$blockId, int &$blockData) : void{
+	public static function convertBlockData(bool $isComputer, int &$blockId, int &$blockData) : void {
 		self::$timingConvertBlock->startTiming();
 
-		switch($blockId){
+		switch ($blockId) {
 			case Block::WOODEN_TRAPDOOR:
 			case Block::IRON_TRAPDOOR:
 				self::convertTrapdoor($blockData);
-			break;
+				break;
 			case Block::STONE_BUTTON:
 			case Block::WOODEN_BUTTON:
 				self::convertButton($blockData);
-			break;
+				break;
 			default:
-				if($isComputer){
+				if ($isComputer) {
 					$src = 0; $dst = 1;
-				}else{
+				} else {
 					$src = 1; $dst = 0;
 				}
 
-				foreach(self::$idListIndex[$src][$blockId] ?? [] as $convertBlockData){
-					if($convertBlockData[$src][1] === -1){
+				foreach (self::$idListIndex[$src][$blockId] ?? [] as $convertBlockData) {
+					if ($convertBlockData[$src][1] === -1) {
 						$blockId = $convertBlockData[$dst][0];
-						if($convertBlockData[$dst][1] !== -1){
+						if ($convertBlockData[$dst][1] !== -1) {
 							$blockData = $convertBlockData[$dst][1];
 						}
-						break;
-					}elseif($convertBlockData[$src][1] === $blockData){
+							break;
+					} elseif ($convertBlockData[$src][1] === $blockData) {
 						$blockId = $convertBlockData[$dst][0];
 						$blockData = $convertBlockData[$dst][1];
-						break;
+							break;
 					}
 				}
-			break;
+				break;
 		}
 
 		self::$timingConvertBlock->stopTiming();
@@ -633,60 +633,60 @@ class ConvertUtils{
 	public static function convertPEToPCMetadata(array $oldData) : array{
 		$newData = [];
 
-		foreach($oldData as $bottom => $d){
-			switch($bottom){
+		foreach ($oldData as $bottom => $d) {
+			switch ($bottom) {
 				case Human::DATA_FLAGS://Flags
 					$flags = 0;
 
-					if(((int) $d[1] & (1 << Human::DATA_FLAG_ONFIRE)) > 0){
+					if (((int) $d[1] & (1 << Human::DATA_FLAG_ONFIRE)) > 0) {
 						$flags |= 0x01;
 					}
 
-					if(((int) $d[1] & (1 << Human::DATA_FLAG_SNEAKING)) > 0){
+					if (((int) $d[1] & (1 << Human::DATA_FLAG_SNEAKING)) > 0) {
 						$flags |= 0x02;
 					}
 
-					if(((int) $d[1] & (1 << Human::DATA_FLAG_SPRINTING)) > 0){
+					if (((int) $d[1] & (1 << Human::DATA_FLAG_SPRINTING)) > 0) {
 						$flags |= 0x08;
 					}
 
-					if(((int) $d[1] & (1 << Human::DATA_FLAG_INVISIBLE)) > 0){
+					if (((int) $d[1] & (1 << Human::DATA_FLAG_INVISIBLE)) > 0) {
 						$flags |= 0x20;
 					}
 
-					if(((int) $d[1] & (1 << Human::DATA_FLAG_CAN_SHOW_NAMETAG)) > 0){
+					if (((int) $d[1] & (1 << Human::DATA_FLAG_CAN_SHOW_NAMETAG)) > 0) {
 						$newData[3] = [6, true];
 					}
 
-					if(((int) $d[1] & (1 << Human::DATA_FLAG_ALWAYS_SHOW_NAMETAG)) > 0){
+					if (((int) $d[1] & (1 << Human::DATA_FLAG_ALWAYS_SHOW_NAMETAG)) > 0) {
 						$newData[3] = [6, true];
 					}
 
-					/*if(((int) $d[1] & (1 << Human::DATA_FLAG_IMMOBILE)) > 0){//TODO
+					/*if (((int) $d[1] & (1 << Human::DATA_FLAG_IMMOBILE)) > 0) {//TODO
 						//$newData[11] = [0, true];
 					}*/
 
-					if(((int) $d[1] & (1 << Human::DATA_FLAG_SILENT)) > 0){
+					if (((int) $d[1] & (1 << Human::DATA_FLAG_SILENT)) > 0) {
 						$newData[4] = [6, true];
 					}
 
 					$newData[0] = [0, $flags];
-				break;
+					break;
 				case Human::DATA_AIR://Air
 					$newData[1] = [1, $d[1]];
-				break;
+					break;
 				case Human::DATA_NAMETAG://Custom name
 					$newData[2] = [3, str_replace("\n", "", $d[1])];//TODO
-				break;
+					break;
 				case Human::DATA_FUSE_LENGTH://TNT
 					$newData[6] = [1, $d[1]];
-				break;
+					break;
 				case Human::DATA_POTION_COLOR:
 					$newData[8] = [1, $d[1]];
-				break;
+					break;
 				case Human::DATA_POTION_AMBIENT:
 					$newData[9] = [6, $d[1] ? true : false];
-				break;
+					break;
 				case Human::DATA_VARIANT:
 				case Human::DATA_PLAYER_FLAGS:
 				case Human::DATA_PLAYER_BED_POSITION:
@@ -699,10 +699,10 @@ class ConvertUtils{
 				case Human::DATA_ALWAYS_SHOW_NAMETAG://TODO: sendPacket?
 				case Projectile::DATA_SHOOTER_ID:
 					//Unused
-				break;
+					break;
 				default:
 					echo "key: ".$bottom." Not implemented\n";
-				break;
+					break;
 				//TODO: add data type
 			}
 		}
@@ -721,7 +721,7 @@ class ConvertUtils{
 	 *
 	 * #blamemojang
 	 */
-	private static function convertTrapdoor(int &$blockData) : void{
+	private static function convertTrapdoor(int &$blockData) : void {
 		//swap bits
 		$blockData ^= (($blockData & 0x04) << 1);
 		$blockData ^= (($blockData & 0x08) >> 1);
@@ -746,7 +746,7 @@ class ConvertUtils{
 	 *
 	 * #blamemojang
 	 */
-	private static function convertButton(int &$blockData) : void{
+	private static function convertButton(int &$blockData) : void {
 		$directions = [
 			0 => 0, // Button on block bottom facing down
 			1 => 5, // Button on block top facing up
@@ -764,15 +764,15 @@ class ConvertUtils{
 	 * @param CompoundTag $blockEntity
 	 * @return CompoundTag
 	 */
-	public static function convertBlockEntity(bool $isComputer, CompoundTag $blockEntity): ?CompoundTag{
+	public static function convertBlockEntity(bool $isComputer, CompoundTag $blockEntity): ?CompoundTag {
 		$cloneBlockEntity = clone $blockEntity;//nbtをはかいしてしまうため
-		switch($cloneBlockEntity["id"]){
+		switch ($cloneBlockEntity["id"]) {
 			case Tile::FLOWER_POT:
 				$cloneBlockEntity->setTag(new ShortTag("Item", $cloneBlockEntity->getShort("item")));
 				$cloneBlockEntity->setTag(new IntTag("Data", $cloneBlockEntity->getInt("mData")));
 
 				$cloneBlockEntity->removeTag("item", "mdata");
-			break;
+				break;
 			case Tile::SIGN:
 				$textData = explode("\n", $cloneBlockEntity->getString("Text", "\n\n\n"));
 
@@ -782,7 +782,7 @@ class ConvertUtils{
 				$cloneBlockEntity->setTag(new StringTag("Text4", BigBrother::toJSON($textData[3])));
 
 				$cloneBlockEntity->removeTag("Text");
-			break;
+				break;
 		}
 
 		return $cloneBlockEntity;
@@ -791,14 +791,14 @@ class ConvertUtils{
 }
 
 
-class ComputerItem extends Item{
+class ComputerItem extends Item {
 	/**
 	 * @param int                $id
 	 * @param int                $meta
 	 * @param int                $count
 	 * @param CompoundTag|string $tag
 	 */
-	public function __construct(int $id = 0, int $meta = 0, int $count = 1, $tag = ""){
+	public function __construct(int $id = 0, int $meta = 0, int $count = 1, $tag = "") {
 		parent::__construct($id, $meta);
 		$this->setCount($count);
 		$this->setCompoundTag($tag);

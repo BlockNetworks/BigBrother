@@ -31,18 +31,18 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class RemoveEntityEffectPacket extends OutboundPacket{
+class RemoveEntityEffectPacket extends OutboundPacket {
 
 	/** @var int */
 	public $eid;
 	/** @var int */
 	public $effectId;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::REMOVE_ENTITY_EFFECT_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putVarInt($this->eid);
 		$this->putByte($this->effectId);
 	}

@@ -31,18 +31,18 @@ namespace shoghicp\BigBrother\network\protocol\Login;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class LoginSuccessPacket extends OutboundPacket{
+class LoginSuccessPacket extends OutboundPacket {
 
 	/** @var string */
 	public $uuid;
 	/** @var string */
 	public $name;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::LOGIN_SUCCESS_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putString($this->uuid);
 		$this->putString($this->name);
 	}

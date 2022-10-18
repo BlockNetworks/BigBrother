@@ -31,16 +31,16 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class KeepAlivePacket extends OutboundPacket{
+class KeepAlivePacket extends OutboundPacket {
 
 	/** @var int */
 	public $id;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::KEEP_ALIVE_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putLong($this->id);
 	}
 }

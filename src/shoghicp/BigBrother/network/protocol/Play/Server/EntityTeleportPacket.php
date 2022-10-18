@@ -31,7 +31,7 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class EntityTeleportPacket extends OutboundPacket{
+class EntityTeleportPacket extends OutboundPacket {
 	/** @var int */
 	public $eid;
 	/** @var float */
@@ -47,11 +47,11 @@ class EntityTeleportPacket extends OutboundPacket{
 	/** @var bool */
 	public $onGround = true;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::ENTITY_TELEPORT_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putVarInt($this->eid);
 		$this->putDouble($this->x);
 		$this->putDouble($this->y);

@@ -31,16 +31,16 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class HeldItemChangePacket extends OutboundPacket{
+class HeldItemChangePacket extends OutboundPacket {
 
 	/** @var int */
 	public $selectedSlot;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::HELD_ITEM_CHANGE_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putByte($this->selectedSlot);
 	}
 }

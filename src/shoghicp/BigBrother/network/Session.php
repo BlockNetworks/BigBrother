@@ -61,7 +61,7 @@ class Session{
 	 * @param int           $identifier
 	 * @param resource      $socket
 	 */
-	public function __construct(ServerManager $manager, int $identifier, $socket){
+	public function __construct(ServerManager $manager, int $identifier, $socket) {
 		$this->manager = $manager;
 		$this->identifier = $identifier;
 		$this->socket = $socket;
@@ -74,7 +74,7 @@ class Session{
 	/**
 	 * @param int $threshold
 	 */
-	public function setCompression(int $threshold) : void{
+	public function setCompression(int $threshold) : void {
 		$this->writeRaw(Binary::writeComputerVarInt(0x03) . Binary::writeComputerVarInt($threshold >= 0 ? $threshold : -1));
 		$this->threshold = $threshold === -1 ? null : $threshold;
 	}
@@ -82,10 +82,10 @@ class Session{
 	/**
 	 * @param string $data
 	 */
-	public function write(string $data) : void{
-		if($this->encryptionEnabled){
+	public function write(string $data) : void {
+		if ($this->encryptionEnabled) {
 			@fwrite($this->socket, $this->aes->encrypt($data));
-		}else{
+		} else {
 			@fwrite($this->socket, $data);
 		}
 	}
@@ -94,11 +94,11 @@ class Session{
 	 * @param int $len
 	 * @return string data read from socket
 	 */
-	public function read(int $len): string{
+	public function read(int $len): string {
 		$data = @fread($this->socket, $len);
-		if($data !== false){
-			if($this->encryptionEnabled){
-				if(strlen($data) > 0){
+		if ($data !== false) {
+			if ($this->encryptionEnabled) {
+				if (strlen($data) > 0) {
 					return $this->aes->decrypt($data);
 				}
 			}
@@ -111,21 +111,21 @@ class Session{
 	/**
 	 * @return string address
 	 */
-	public function getAddress() : string{
+	public function getAddress() : string {
 		return $this->address;
 	}
 
 	/**
 	 * @return int port
 	 */
-	public function getPort() : int{
+	public function getPort() : int {
 		return $this->port;
 	}
 
 	/**
 	 * @param string $secret
 	 */
-	public function enableEncryption(string $secret) : void{
+	public function enableEncryption(string $secret) : void {
 		$this->aes = new AES(AES::MODE_CFB8);
 		$this->aes->enableContinuousBuffer();
 		$this->aes->setKey($secret);
@@ -137,21 +137,21 @@ class Session{
 	/**
 	 * @param Packet $packet
 	 */
-	public function writePacket(Packet $packet) : void{
+	public function writePacket(Packet $packet) : void {
 		$this->writeRaw($packet->write());
 	}
 
 	/**
 	 * @param string $data
 	 */
-	public function writeRaw(string $data) : void{
-		if($this->threshold === null){
+	public function writeRaw(string $data) : void {
+		if ($this->threshold === null) {
 			$this->write(Binary::writeComputerVarInt(strlen($data)) . $data);
-		}else{
+		} else {
 			$dataLength = strlen($data);
-			if($dataLength >= $this->threshold){
+			if ($dataLength >= $this->threshold) {
 				$data = zlib_encode($data, ZLIB_ENCODING_DEFLATE, 7);
-			}else{
+			} else {
 				$dataLength = 0;
 			}
 
@@ -160,12 +160,12 @@ class Session{
 		}
 	}
 
-	public function process() : void{
+	public function process() : void {
 		$length = Binary::readVarIntSession($this);
-		if($length === false or $this->status === -1){
+		if ($length === false or $this->status === -1) {
 			$this->close("Connection closed");
 			return;
-		}elseif($length <= 0 or $length > 131070){
+		} elseif ($length <= 0 or $length > 131070) {
 			$this->close("Invalid length");
 			return;
 		}
@@ -174,28 +174,28 @@ class Session{
 
 		$buffer = $this->read($length);
 
-		if($this->threshold !== null){
+		if ($this->threshold !== null) {
 			$dataLength = Binary::readComputerVarInt($buffer, $offset);
-			if($dataLength !== 0){
-				if($dataLength < $this->threshold){
+			if ($dataLength !== 0) {
+				if ($dataLength < $this->threshold) {
 					$this->close("Invalid compression threshold");
-				}else{
+				} else {
 					$buffer = zlib_decode(substr($buffer, $offset));
 					$offset = 0;
 				}
-			}else{
+			} else {
 				$buffer = substr($buffer, $offset);
 				$offset = 0;
 			}
 		}
 
-		if($this->status === 2){ //Login
+		if ($this->status === 2) { //Login
 			$this->manager->sendPacket($this->identifier, $buffer);
-		}elseif($this->status === 1){
+		} elseif ($this->status === 1) {
 			$pid = Binary::readComputerVarInt($buffer, $offset);
-			if($pid === 0x00){
+			if ($pid === 0x00) {
 				$sample = [];
-				foreach($this->manager->sample as $id => $name){
+				foreach ($this->manager->sample as $id => $name) {
 					$sample[] = [
 						"name" => $name,
 						"id" => $id
@@ -213,22 +213,22 @@ class Session{
 					],
 					"description" => json_decode(BigBrother::toJSONInternal($this->manager->description))
 				];
-				if($this->manager->favicon !== null){
+				if ($this->manager->favicon !== null) {
 					$data["favicon"] = $this->manager->favicon;
 				}
 				$data = json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
 				$data = Binary::writeComputerVarInt(0x00) . Binary::writeComputerVarInt(strlen($data)) . $data;
 				$this->writeRaw($data);
-			}elseif($pid === 0x01){
+			} elseif ($pid === 0x01) {
 				$packet = new PingPacket();
 				$packet->read($buffer, $offset);
 				$this->writePacket($packet);
 				$this->status = -1;
 			}
-		}elseif($this->status === 0){
+		} elseif ($this->status === 0) {
 			$pid = Binary::readComputerVarInt($buffer, $offset);
-			if($pid === 0x00){
+			if ($pid === 0x00) {
 				$protocol = Binary::readComputerVarInt($buffer, $offset);
 				$len = Binary::readComputerVarInt($buffer, $offset);
 				//host name
@@ -237,26 +237,26 @@ class Session{
 				$offset += 2;
 				$nextState = Binary::readComputerVarInt($buffer, $offset);
 
-				if($nextState === 1){
+				if ($nextState === 1) {
 					$this->status = 1;
-				}elseif($nextState === 2){
+				} elseif ($nextState === 2) {
 					$this->status = -1;
-					if($protocol < ServerManager::PROTOCOL){
+					if ($protocol < ServerManager::PROTOCOL) {
 						$packet = new LoginDisconnectPacket();
 						$packet->reason = json_encode(["translate" => "multiplayer.disconnect.outdated_client", "with" => [["text" => ServerManager::VERSION]]]);
 						$this->writePacket($packet);
-					}elseif($protocol > ServerManager::PROTOCOL){
+					} elseif ($protocol > ServerManager::PROTOCOL) {
 						$packet = new LoginDisconnectPacket();
 						$packet->reason = json_encode(["translate" => "multiplayer.disconnect.outdated_server", "with" => [["text" => ServerManager::VERSION]]]);
 						$this->writePacket($packet);
-					}else{
+					} else {
 						$this->manager->openSession($this);
 						$this->status = 2;
 					}
-				}else{
+				} else {
 					$this->close();
 				}
-			}else{
+			} else {
 				$this->close("Unexpected packet $pid");
 			}
 		}
@@ -265,14 +265,14 @@ class Session{
 	/**
 	 * @return int identifier
 	 */
-	public function getID() : int{
+	public function getID() : int {
 		return $this->identifier;
 	}
 
 	/**
 	 * @param string $reason
 	 */
-	public function close(string $reason = "") : void{
+	public function close(string $reason = "") : void {
 		$this->manager->close($this);
 	}
 }

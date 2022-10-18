@@ -31,16 +31,16 @@ namespace shoghicp\BigBrother\network\protocol\Play\Client;
 
 use shoghicp\BigBrother\network\InboundPacket;
 
-class ChatPacket extends InboundPacket{
+class ChatPacket extends InboundPacket {
 
 	/** @var string */
 	public $message;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::CHAT_PACKET;
 	}
 
-	protected function decode() : void{
+	protected function decode() : void {
 		$this->message = $this->getString();
 	}
 }

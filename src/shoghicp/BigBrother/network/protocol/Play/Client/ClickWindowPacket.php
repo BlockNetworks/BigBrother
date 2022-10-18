@@ -32,7 +32,7 @@ namespace shoghicp\BigBrother\network\protocol\Play\Client;
 use shoghicp\BigBrother\network\InboundPacket;
 use pocketmine\item\Item;
 
-class ClickWindowPacket extends InboundPacket{
+class ClickWindowPacket extends InboundPacket {
 
 	/** @var int */
 	public $windowID;
@@ -47,11 +47,11 @@ class ClickWindowPacket extends InboundPacket{
 	/** @var Item */
 	public $clickedItem;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::CLICK_WINDOW_PACKET;
 	}
 
-	protected function decode() : void{
+	protected function decode() : void {
 		$this->windowID = $this->getByte();
 		$this->slot = $this->getSignedShort();
 		$this->button = $this->getSignedByte();

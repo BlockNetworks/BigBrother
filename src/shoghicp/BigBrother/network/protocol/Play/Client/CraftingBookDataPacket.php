@@ -31,7 +31,7 @@ namespace shoghicp\BigBrother\network\protocol\Play\Client;
 
 use shoghicp\BigBrother\network\InboundPacket;
 
-class CraftingBookDataPacket extends InboundPacket{
+class CraftingBookDataPacket extends InboundPacket {
 
 	/** @var int */
 	public $type;
@@ -42,20 +42,20 @@ class CraftingBookDataPacket extends InboundPacket{
 	/** @var bool */
 	public $isFilteringCraftable = false;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::CRAFTING_BOOK_DATA_PACKET;
 	}
 
-	protected function decode() : void{
+	protected function decode() : void {
 		$this->type = $this->getVarInt();
-		switch($this->type){
+		switch ($this->type) {
 			case 0://Displayed Recipe
 				$this->recipeId = $this->getInt();
-			break;
+				break;
 			case 1://Crafting Book Status
 				$this->isCraftingBookOpen = $this->getBool();
 				$this->isFilteringCraftable = $this->getBool();
-			break;
+				break;
 		}
 	}
 }

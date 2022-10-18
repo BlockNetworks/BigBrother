@@ -31,21 +31,21 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class EntityPropertiesPacket extends OutboundPacket{
+class EntityPropertiesPacket extends OutboundPacket {
 
 	/** @var int */
 	public $eid;
 	/** @var array */
 	public $entries = [];
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::ENTITY_PROPERTIES_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putVarInt($this->eid);
 		$this->putInt(count($this->entries));
-		foreach($this->entries as $entry){
+		foreach ($this->entries as $entry) {
 			$this->putString($entry[0]);
 			$this->putDouble($entry[1]);
 			$this->putVarInt(0);//TODO: Modifiers

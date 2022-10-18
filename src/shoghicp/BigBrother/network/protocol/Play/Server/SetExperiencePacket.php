@@ -31,7 +31,7 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class SetExperiencePacket extends OutboundPacket{
+class SetExperiencePacket extends OutboundPacket {
 
 	/** @var float */
 	public $experience;
@@ -40,11 +40,11 @@ class SetExperiencePacket extends OutboundPacket{
 	/** @var int */
 	public $totalExperience;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::SET_EXPERIENCE_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putFloat($this->experience);
 		$this->putVarInt($this->level);
 		$this->putVarInt($this->totalExperience);

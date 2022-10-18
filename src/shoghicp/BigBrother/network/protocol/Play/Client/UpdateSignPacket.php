@@ -31,7 +31,7 @@ namespace shoghicp\BigBrother\network\protocol\Play\Client;
 
 use shoghicp\BigBrother\network\InboundPacket;
 
-class UpdateSignPacket extends InboundPacket{
+class UpdateSignPacket extends InboundPacket {
 
 	/** @var int */
 	public $x;
@@ -48,11 +48,11 @@ class UpdateSignPacket extends InboundPacket{
 	/** @var string */
 	public $line4;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::UPDATE_SIGN_PACKET;
 	}
 
-	protected function decode() : void{
+	protected function decode() : void {
 		$this->getPosition($this->x, $this->y, $this->z);
 		$this->line1 = $this->getString();
 		$this->line2 = $this->getString();

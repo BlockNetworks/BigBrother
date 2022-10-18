@@ -31,18 +31,18 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class TimeUpdatePacket extends OutboundPacket{
+class TimeUpdatePacket extends OutboundPacket {
 
 	/** @var int */
 	public $age;
 	/** @var int */
 	public $time;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::TIME_UPDATE_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putLong($this->age);
 		$this->putLong($this->time);
 	}

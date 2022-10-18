@@ -32,21 +32,21 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 use shoghicp\BigBrother\network\OutboundPacket;
 use pocketmine\item\Item;
 
-class WindowItemsPacket extends OutboundPacket{
+class WindowItemsPacket extends OutboundPacket {
 
 	/** @var int */
 	public $windowID;
 	/** @var Item[] */
 	public $items = [];
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::WINDOW_ITEMS_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putByte($this->windowID);
 		$this->putShort(count($this->items));
-		foreach($this->items as $item){
+		foreach ($this->items as $item) {
 			$this->putSlot($item);
 		}
 	}

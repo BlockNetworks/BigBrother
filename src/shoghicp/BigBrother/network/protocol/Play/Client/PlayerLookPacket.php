@@ -31,7 +31,7 @@ namespace shoghicp\BigBrother\network\protocol\Play\Client;
 
 use shoghicp\BigBrother\network\InboundPacket;
 
-class PlayerLookPacket extends InboundPacket{
+class PlayerLookPacket extends InboundPacket {
 
 	/** @var float */
 	public $yaw;
@@ -40,11 +40,11 @@ class PlayerLookPacket extends InboundPacket{
 	/** @var bool */
 	public $onGround;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::PLAYER_LOOK_PACKET;
 	}
 
-	protected function decode() : void{
+	protected function decode() : void {
 		$this->yaw = $this->getFloat();
 		$this->pitch = $this->getFloat();
 		$this->onGround = $this->getBool();

@@ -31,7 +31,7 @@ namespace shoghicp\BigBrother\network\protocol\Play\Server;
 
 use shoghicp\BigBrother\network\OutboundPacket;
 
-class ExplosionPacket extends OutboundPacket{
+class ExplosionPacket extends OutboundPacket {
 
 	/** @var float */
 	public $x;
@@ -50,17 +50,17 @@ class ExplosionPacket extends OutboundPacket{
 	/** @var float */
 	public $motionZ;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::EXPLOSION_PACKET;
 	}
 
-	protected function encode() : void{
+	protected function encode() : void {
 		$this->putFloat($this->x);
 		$this->putFloat($this->y);
 		$this->putFloat($this->z);
 		$this->putFloat($this->radius);
 		$this->putInt(count($this->records));
-		foreach($this->records as $record){
+		foreach ($this->records as $record) {
 			$this->putByte($record->getX());
 			$this->putByte($record->getY());
 			$this->putByte($record->getZ());

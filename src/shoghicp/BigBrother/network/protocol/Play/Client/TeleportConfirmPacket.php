@@ -31,16 +31,16 @@ namespace shoghicp\BigBrother\network\protocol\Play\Client;
 
 use shoghicp\BigBrother\network\InboundPacket;
 
-class TeleportConfirmPacket extends InboundPacket{
+class TeleportConfirmPacket extends InboundPacket {
 
 	/** @var int */
 	public $teleportId;
 
-	public function pid() : int{
+	public function pid() : int {
 		return self::TELEPORT_CONFIRM_PACKET;
 	}
 
-	protected function decode() : void{
+	protected function decode() : void {
 		$this->teleportId = $this->getVarInt();
 	}
 }

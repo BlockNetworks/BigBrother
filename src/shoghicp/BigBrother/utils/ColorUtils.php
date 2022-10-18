@@ -31,7 +31,7 @@ namespace shoghicp\BigBrother\utils;
 
 use pocketmine\utils\Color;
 
-class ColorUtils extends Color{
+class ColorUtils extends Color {
 
 	// TODO this color table is not up-to-date (please update me!!)
 	/** @var array */
@@ -185,18 +185,18 @@ class ColorUtils extends Color{
 	 * @var string $path
 	 * @internal
 	 */
-	public static function generateColorIndex(string $path){
+	public static function generateColorIndex(string $path) {
 		$indexes = "";
 
-		for($r=0; $r<256; ++$r){
-			for($g=0; $g<256; ++$g){
-				for($b=0; $b<256; ++$b){
+		for ($r = 0; $r < 256; ++$r) {
+			for ($g = 0; $g < 256; ++$g) {
+				for ($b = 0; $b < 256; ++$b) {
 					$ind = 0x00;
 					$min = PHP_INT_MAX;
 
-					foreach(self::$colorTable as $index => $rgb){
-						$squared = ($rgb[0]-$r)**2 + ($rgb[1]-$g)**2 + ($rgb[2]-$b)**2;
-						if($squared < $min){
+					foreach (self::$colorTable as $index => $rgb) {
+						$squared = ($rgb[0] - $r) ** 2 + ($rgb[1] - $g) ** 2 + ($rgb[2] - $b) ** 2;
+						if ($squared < $min) {
 							$ind = $index;
 							$min = $squared;
 						}
@@ -213,7 +213,7 @@ class ColorUtils extends Color{
 	/**
 	 * @var string $path
 	 */
-	public static function loadColorIndex(string $path){
+	public static function loadColorIndex(string $path) {
 		self::$index = zlib_decode(file_get_contents($path));
 	}
 
@@ -225,11 +225,11 @@ class ColorUtils extends Color{
 	 * @param int $height
 	 * @return string
 	 */
-	public static function convertColorsToPC(array $colors, int $width, int $height) : string{
+	public static function convertColorsToPC(array $colors, int $width, int $height) : string {
 		$ret = "";
 
-		for($y=0; $y<$height; ++$y){
-			for($x=0; $x<$width; ++$x){
+		for ($y = 0; $y < $height; ++$y) {
+			for ($x = 0; $x < $width; ++$x) {
 				$ret .= $colors[$y][$x]->a >= 128 ? self::$index[($colors[$y][$x]->r << 16) + ($colors[$y][$x]->g << 8) + $colors[$y][$x]->b] : chr(0x00);
 			}
 		}
